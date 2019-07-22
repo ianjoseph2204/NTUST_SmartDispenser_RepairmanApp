@@ -1,0 +1,8 @@
+{
+  "name": "RepairmanApp",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "id": "66e3714b"
+}
