@@ -1,0 +1,15 @@
+// App Styles
+// ----------------------------------------------------------------------------
+// Put style rules here that you want to apply to the entire application. These 
+// styles are for the entire app and not just one component. Additionally, this 
+// file can hold Sass mixins, functions, and placeholder classes to be imported 
+// and used throughout the application.
+
+// This style is use to edit modal style
+.my-custom-modal-css .modal-wrapper {
+    height: 70%;
+    top: 30%;
+    position: absolute;
+    display: block;
+    border-radius: 10px;
+}

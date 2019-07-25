@@ -1,0 +1,80 @@
+ion-col {
+    --ion-grid-column-padding: 0px;
+}
+
+ion-grid {
+    --ion-grid-padding: 0px;
+}
+
+ion-content {
+    --background: #4a90e2;
+}
+
+ion-footer {
+    --background: #4a90e2;
+}
+
+ion-list {
+    background-color: transparent;
+}
+
+ion-item {
+    --background: rgba(0, 0, 0, 0);
+    --border-color: rgba(0, 0, 0, 0);
+}
+
+.header {
+    --background: #4a90e2;
+}
+
+.footer {
+    --background: #3776c0;
+    --min-height: 0px;
+}
+
+ion-button.button-footer {
+    --background: #4587d5;
+    --box-shadow: none;
+    text-transform: none !important;
+    font-size: 110% !important;
+}
+
+ion-button.button-content {
+    --background: rgba(255, 255, 255, 0.1);
+    --box-shadow: none;
+    --border-style: solid;
+    --border-width: 1px;
+    --border-color: white;
+}
+
+.title-text {
+    --color: white;
+    font-weight: bold;
+}
+
+ion-item {
+    --min-height: 0px !important;
+}
+
+// If you want to try div as a button but i think it is not suitable method.
+// Dont forget to add ripple effect.
+//
+// * {
+//     box-sizing: border-box;
+// }
+
+// /* Create two equal columns that floats next to each other */
+// .column {
+//     float: left;
+//     width: 50%;
+//     padding: 0px;
+//     height: 50px;
+//     /* Should be removed. Only for demonstration */
+// }
+
+// /* Clear floats after the columns */
+// .row:after {
+//     content: "";
+//     display: table;
+//     clear: both;
+// }
