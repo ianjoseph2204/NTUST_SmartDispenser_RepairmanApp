@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+  <title>ACUO | Register Page</title>
+</head>
+
+<ion-content class="i-theme1">
+
+  <div class="icon-cancel">
+    <img src="assets/cancel/rectangle@3x.png" alt="cancel" (click)="backFunc()">
+  </div>
+
+  <div class="header">
+    <img 
+      class="img-header"
+      src="assets/acuo-icons/logo-2@3xx.png" 
+      alt="acuo-icons">
+  </div>
+
+  <div class="section">
+    <div class="section-inside">
+      <ion-item>
+        <ion-label position="floating">Full Name</ion-label>
+        <ion-input type="text" [(ngModel)]="fullname"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating">Employee ID</ion-label>
+        <ion-input type="text" [(ngModel)]="employee_id"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating">Company Email Address</ion-label>
+        <ion-input type="email" [(ngModel)]="email" (change)=checkEmail(email)></ion-input>
+        <p *ngIf="emailFalse" class="falseInput">Email is invalid or must be company domain!</p>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" [(ngModel)]="password" (change)=checkPassword(password)></ion-input>
+        <p *ngIf="passwordFalse" class="falseInput">Password must minimum 6 character with at least contains 1 alphabet and 1 number!</p>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating">Re-enter Password</ion-label>
+        <ion-input type="password" [(ngModel)]="re_password" (change)=checkSamePassword(re_password)></ion-input>
+        <p *ngIf="passwordFalse" class="falseInput">Password not match!</p>
+      </ion-item>
+
+      <ion-item>
+        <div class="center">
+          <h6>Your picture</h6><br>
+          <img src="/assets/upload-image/upload.png" class="uploadPhoto" />
+        </div>
+      </ion-item>
+  
+      <h6 class="confirm-text">
+        By clicking <b>Sign Up</b>, you agree to our Terms, Data Policy and Cookie Policy.
+        You will receieve verification email in your mailbox after the company verified your account.
+      </h6>
+  
+      <div class="btn-yes">
+        <ion-button class="i-btn-yes" size="small" fill="solid" expand="block" (click)="signUp()">Sign up</ion-button>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

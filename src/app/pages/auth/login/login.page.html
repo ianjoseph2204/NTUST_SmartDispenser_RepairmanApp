@@ -1,0 +1,34 @@
+<ion-content class="i-theme1">
+
+  <div class="header">
+    <img 
+      class="img-header"
+      src="assets/acuo-icons/logo-2@3xx.png" 
+      alt="acuo-icons">
+  </div>
+
+  <div class="section">
+    <div class="section-inside">
+      <ion-item>
+        <ion-label position="floating">Email Address/Employee ID</ion-label>
+        <ion-input type="text" [(ngModel)]="credential"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+  
+      <div class="btn-yes">
+        <ion-button class="i-btn-yes" size="small" fill="solid" expand="block" (click)="login()">Login</ion-button>
+      </div>
+  
+      <div class="signup">
+        <h6>Don't have account yet? <br>
+          <span class="register" (click)="registerLink()">SIGN UP</span>
+        </h6>
+      </div>
+    </div>
+  </div>
+  
+</ion-content>
