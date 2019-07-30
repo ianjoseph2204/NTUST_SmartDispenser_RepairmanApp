@@ -13,11 +13,21 @@ export class DispenserAPIService {
   /* 01 */ private urlGetToken: string = this.domain + 'Login';
   /* 02 */ private urlCreateUser: string = this.domain + 'CreateUser';
   /* 03 */ private urlUserLogin: string = this.domain + 'UserLogin';
-  /* 04 */ private urlAssignmentDone: string = this.domain + 'Assignment/Done?Employee_ID=';
-  /* 05 */ private urlAssignmentNext: string = this.domain + 'Assignment/Next?Employee_ID=';
-  /* 06 */ private urlAssignmentToday: string = this.domain + 'Assignment/Today?Employee_ID=';
-  /* 07 */ private urlRepairmanArrived: string = this.domain + 'RepairmanArrived';
-  /* 08 */ private urlRepairComplete: string = this.domain + 'RepairComplete';
+  /* 04 */ private urlDispenserDetail: string = this.domain + 'Dispenser/Detail?Device_ID=';
+  /* 05 */ private urlGetDispenserRepairCondition: string = this.domain + 'Dispenser/Repair?Device_ID=';
+
+  // function list
+  /*
+    async getToken ()
+    async registerNewUser (fullname: string, email: string, password: string, repassword: string, employee_id: string, photo: any)
+    async loginUser (email: string, password: string)
+    async getDispenserDetail (device_id: string)
+    async getDispenserRepairCondition (device_id: string)
+    async getAssignmentDone (device_id: string, employee_id: string)
+    async getAssignmentNext (device_id: string, employee_id: string)
+    async getAssignmentToday (device_id: string, employee_id: string, nowTime: string)
+    convertApiTimeToJson (time: string)
+  */
 
   constructor(private http: HttpClient) { }
 
@@ -72,7 +82,14 @@ export class DispenserAPIService {
    *    "Message": "Registration success!"
    * }
    */
-  async registerNewUser (fullname: string, email: string, password: string, repassword: string, employee_id: string, photo: any) {
+  async registerNewUser (
+    fullname: string, 
+    email: string, 
+    password: string, 
+    repassword: string, 
+    employee_id: string, 
+    photo: any
+  ) {
     
     let url = this.urlCreateUser;
     let token: string = "";
@@ -186,19 +203,227 @@ export class DispenserAPIService {
       });
   }
 
-  async getAssignmentDone (employee_id: string) {
-    let url = this.urlAssignmentDone + employee_id;
+  /**
+   * This function is to get details of the target dispenser from
+   * the API. It returns the json format.
+   * 
+   * @param     device_id   The device ID of target dispenser
+   * 
+   * @returns   value       The json object of data
+   * 
+   * @example
+   *
+   * {
+    *   "Device_ID": "EE_07_01",
+    *   "Building": "Electrical and Computer Engineering Building 7F",
+    *   "Position": "Next to the elevator",
+    *   "Type": "UW-9615AG-1"
+    * }
+    */
+  async getDispenserDetail (device_id: string) {
+    
+    let url = this.urlDispenserDetail + device_id;
 
+    let returnValue = {
+      "Device_ID": device_id,
+      "Building": "",
+      "Position": "",
+      "Type": ""
+    }
+
+    await this.http.get(url).toPromise()
+      .then((result) => {
+        returnValue = result['Data'];
+      }, () => {
+        console.error("Promise rejected: unable to get dispenser detail!");
+      })
+      .catch((e) => {
+        console.error("Function error: on getDispenserDetail => " + e);
+      });
+
+    return returnValue;
   }
 
-  async getAssignmentNext (employee_id: string) {
-    let url = this.urlAssignmentNext + employee_id;
+  /**
+   * This function is to get the repair condition of the target
+   * dispenser from the API. It contains the problem that still
+   * under maintenance where the status is not 7 until it being
+   * complete or status equal to 7. It returns the json format.
+   * 
+   * @param     device_id   The device ID of target dispenser
+   * 
+   * @returns   value       The json object of data
+   * 
+   * @example   
+   * 
+   * *noted that the  email with "at" because using
+   * symbol will break the comment line
+   *
+   * [
+   *    {
+   *      Archive: false,
+   *      ArriveTime: "",
+   *      CompleteTime: "2019-01-02 24:00:00",
+   *      Complete_Index: 0,
+   *      Complete_Source: "",
+   *      Complete_Source2: "",
+   *      Complete_Source3: "",
+   *      ConfirmTIme: "",
+   *      Delete: false,
+   *      Description: "Leaking water",
+   *      Device_ID: "T4_04_01",
+   *      Email: "ntust.smartcampus@gmail.com",
+   *      ErrorType: 3,
+   *      Index: 0,
+   *      Maintainer: "Mr.Pang",
+   *      MaintenanceDoneTime: "",
+   *      MissionNumber: 3,
+   *      NotifyTime: "2019-01-02 20:16:00",
+   *      RepairCallTime: "",
+   *      RepairDoneTime: "",
+   *      Result: "Fan and Compressor are broken",
+   *      Source: "",
+   *      Source2: "",
+   *      Source3: "",
+   *      Status: 7,
+   *      UploadTime: "2019-01-02 20:16:00"
+   *    },
+   *    {
+   *      Archive: false,
+   *      ArriveTime: "",
+   *      CompleteTime: "",
+   *      Complete_Index: 0,
+   *      Complete_Source: "",
+   *      Complete_Source2: "",
+   *      Complete_Source3: "",
+   *      ConfirmTIme: "",
+   *      Delete: false,
+   *      Description: "Uable to water",
+   *      Device_ID: "T4_04_01",
+   *      Email: "muhamadaldy17@gmail.com",
+   *      ErrorType: 2,
+   *      Index: 0,
+   *      Maintainer: "",
+   *      MaintenanceDoneTime: "",
+   *      MissionNumber: 54,
+   *      NotifyTime: "",
+   *      RepairCallTime: "",
+   *      RepairDoneTime: "",
+   *      Result: null,
+   *      Source: "",
+   *      Source2: "",
+   *      Source3: "",
+   *      Status: 1,
+   *      UploadTime: "2019-07-30 10:12:17"
+   *    },
+   *    ...
+   * ]
+   */
+  async getDispenserRepairCondition (device_id: string) {
+    
+    let url = this.urlGetDispenserRepairCondition + device_id;
 
+    let returnValue = [{}];
+
+    await this.http.get(url).toPromise()
+      .then((result) => {
+        returnValue = result['Data'];
+      }, () => {
+        console.error("Promise rejected: unable to get dispenser repair condition!");
+      })
+      .catch((e) => {
+        console.error("Function error: on getDispenserRepairCondition => " + e);
+      });
+
+    return returnValue;
   }
 
-  async getAssignmentToday (employee_id: string) {
-    let url = this.urlAssignmentToday + employee_id;
+  async getAssignmentDone (device_id: string, employee_id: string) {
+    
+    // get data from RepairCondition
+    let data = await this.getDispenserRepairCondition(device_id);
+    let returnArray = [];
 
+    // for every data will be filtered to get what have been done
+    for (let i = 0 ; i < data.length ; i++) {
+
+      // if data contains the employee id we need
+      if (data[i]['Employee_ID'] === employee_id) {
+
+        // if data contains status above-equal to 5 and has repair time done
+        if (data[i]['Status'] >= 5 && data[i]['RepairDoneTime'] !== "") {
+          
+          returnArray.push(data[i]);
+        }  
+      }
+    }
+
+    return returnArray;
+  }
+
+  async getAssignmentNext (device_id: string, employee_id: string) {
+    
+    // get data from RepairCondition
+    let data = await this.getDispenserRepairCondition(device_id);
+    let returnArray = [];
+
+    // for every data will be filtered to get what have been done
+    for (let i = 0 ; i < data.length ; i++) {
+
+      // if data contains the employee id we need
+      if (data[i]['Employee_ID'] === employee_id) {
+
+        // if data contains status = 4 but has repair time done
+        if (data[i]['Status'] === 4 && data[i]['RepairDoneTime'] !== "") {
+          
+          returnArray.push(data[i]);
+        }  
+      }
+    }
+
+    return returnArray;
+  }
+
+  async getAssignmentToday (device_id: string, employee_id: string, nowTime: string) {
+    
+    // get data from RepairCondition
+    let data = await this.getDispenserRepairCondition(device_id);
+    let returnArray = [];
+
+    // for every data will be filtered to get what have been done
+    for (let i = 0 ; i < data.length ; i++) {
+
+      // if data contains the employee id we need
+      if (data[i]['Employee_ID'] === employee_id) {
+
+        // if data contains status = 5 and has repair time done
+        if (data[i]['Status'] === 4 && data[i]['RepairDoneTime'] !== "") {
+
+          let missionTime = this.convertApiTimeToJson(data[i]['RepairDoneTime']);
+          let currentTime = this.convertApiTimeToJson(nowTime);
+          
+          // if data has same day as mission deadline
+          if (
+            missionTime['Year'] === currentTime['Year'] &&
+            missionTime['Month'] === currentTime['Month'] &&
+            missionTime['DateOfMonth'] === currentTime['DateOfMonth']
+          ) {
+            
+            // if data is under the deadline time
+            if (missionTime['Hour'] <= currentTime['Hour'] &&
+                missionTime['Minute'] <= currentTime['Minute'] &&
+                missionTime['Second'] <= currentTime['Second']
+            ) {
+              
+              // put into data will be returned
+              returnArray.push(data[i]);
+            }
+          }
+        }  
+      }
+    }
+
+    return returnArray;
   }
 
   async repairmanHasArrived (employee_id: string, assignment_num: string) {
@@ -209,5 +434,79 @@ export class DispenserAPIService {
   async repairmentReport (file: any, employee_id: string, assignment_num: string) {
     let url = this.urlRepairComplete;
 
+  }
+
+  /**
+   * This function is to convert the time from the API into Date
+   * object in typescript library. The purpose is to create a new
+   * Date object with data from the API. This function will return
+   * Date object
+   * 
+   * @param     time    Value of time from API in "2019-03-08 16:32:00" format
+   * 
+   * @returns   Date    Date object converted result from time
+   * 
+   * @example
+   * 
+   * {
+   *    "Year": 2019,
+   *    "Month": 2,
+   *    "DateOfMonth": 14,
+   *    "Hour": 19,
+   *    "Minute": 44,
+   *    "Second": 11,
+   * }
+   */
+  convertApiTimeToJson (time: string) {
+    // time passed is String, construct into Date format
+    // time example from json: "2019-03-08 16:32:00"
+    // format: YEAR-MONTH-DATEOFMONTH HOUR:MINUTE:SECOND
+    
+    // split into DATE form and HOUR form
+    let splitTime = time.split(" ");
+
+      ////////////////////////////////////////////
+     //  DATE PART                             //
+    ////////////////////////////////////////////
+
+    // resultDate = YEAR-MONTH-DATEOFMONTH
+    let resultDate = splitTime[0];
+
+    // split DATE into YEAR, MONTH, and DATEOFMONTH
+    let splitDate = resultDate.split("-");
+
+    let resultYear = splitDate[0];
+    let resultMonth = splitDate[1];
+    let resultDateOfMonth = splitDate[2];
+
+      ////////////////////////////////////////////
+     //  HOUR PART                             //
+    ////////////////////////////////////////////
+
+    // resultHour = HOUR:MINUTE:SECOND
+    let resultHour = splitTime[1];
+
+    // split HOUR into HOUR, MINUTE, and SECOND
+    let splitHour = resultHour.split(":");
+
+    let resultHourC = splitHour[0];
+    let resultMinute = splitHour[1];
+    let resultSecond = splitHour[2];
+
+      ////////////////////////////////////////////
+     //  CONSTRUCT DATE PART                   //
+    ////////////////////////////////////////////
+
+    // now we get every component to construct date into JSON format
+    let newDate = {
+      'Year': resultYear,
+      'Month': resultMonth,
+      'DateOfMonth': resultDateOfMonth,
+      'Hour': resultHourC,
+      'Minute': resultMinute,
+      'Second': resultSecond
+    };
+
+    return newDate;
   }
 }
