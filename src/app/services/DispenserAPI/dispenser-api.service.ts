@@ -427,12 +427,10 @@ export class DispenserAPIService {
   }
 
   async repairmanHasArrived (employee_id: string, assignment_num: string) {
-    let url = this.urlRepairmanArrived;
 
   }
 
   async repairmentReport (file: any, employee_id: string, assignment_num: string) {
-    let url = this.urlRepairComplete;
 
   }
 
