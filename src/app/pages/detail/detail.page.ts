@@ -8,17 +8,21 @@ import { ModalController, NavParams } from '@ionic/angular';
 })
 export class DetailPage implements OnInit {
 
-  val;
-
+  data: any;
   Arrived = false;
   inputCamera = false;
 
 
-  constructor(public modalController: ModalController, public navParams: NavParams) {
-    this.val = this.navParams.get('value');
+  constructor(
+    public modalController: ModalController, 
+    public navParams: NavParams
+  ) {
+    this.data = navParams.get('Data');
   }
 
   ngOnInit() {
+    console.log(this.data);
+    
   }
 
   dismiss() {
