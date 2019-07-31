@@ -3,9 +3,20 @@
     --ion-safe-area-bottom: 22px;
 }
 
+ion-header {
+    background-color: #ededed;
+    height: auto;
+    padding-bottom: 0px;
+}
+
+.header-md:after {
+    width: 0%;
+}
+
 ion-content {
     --background: #ededed;
-    --color: #444444;
+    height: 85%;
+    padding-top: 0px;
 }
 
 .swiper-slide {
@@ -23,7 +34,7 @@ ion-slide {
 }
 
 ion-card.card-future {
-    border-left: 3px solid #259ed6;
+    border-left: 5px solid #259ed6;
 }
 
 ion-card.card-today {
@@ -32,7 +43,7 @@ ion-card.card-today {
 }
 
 ion-card.card-done {
-    border-left: 4px solid #74f368;
+    border-left: 5px solid #69d392;
 }
 
 .ion-list--no-background {

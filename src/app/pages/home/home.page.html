@@ -1,82 +1,18 @@
 <ion-app>
-  <ion-content fullscreen padding scroll-y="false">
-    <ion-slides [options]="slideOpts">
+  
+  <ion-header padding>
+    <ion-item class="ion-item--no-background title" lines="none">
+      <ion-label>{{fragmentTitle}}</ion-label>
+      <ion-avatar slot="end">
+        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+      </ion-avatar>
+    </ion-item>
+  </ion-header>
+
+  <ion-content padding scroll-y="false">
+    <ion-slides [options]="slideOpts" #slides (ionSlideDidChange)="slideChanges()">
 
       <!-- DONE SLIDE -->
-      <ion-slide>
-        <ion-list>
-
-          <ion-item lines="none">
-            <ion-avatar slot="end">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-avatar>
-            <ion-label>What I've Done</ion-label>
-          </ion-item>
-
-          <ion-item lines="none">
-            <ion-label>
-              <h2>Today</h2>
-              <p>April 1</p>
-            </ion-label>
-          </ion-item>
-
-          <ion-card class="card-done">
-            <ion-item lines="none">
-              <ion-label slot="start">
-                <h2>Client Name</h2>
-              </ion-label>
-              <ion-label slot="end">
-                <h2>10:00</h2>
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label slot="start">
-                <h2>Address</h2>
-              </ion-label>
-            </ion-item>
-          </ion-card>
-
-        </ion-list>
-      </ion-slide>
-
-      <!-- TODAY SLIDE -->
-      <ion-slide>
-        <ion-list class="ion-list--no-background">
-
-          <ion-item class="ion-item--no-background title" lines="none">
-            <ion-label>Today's Mission</ion-label>
-            <ion-avatar slot="end">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-            </ion-avatar>
-          </ion-item>
-
-          <ion-item class="ion-item--no-background" lines="none">
-            <ion-label>
-              <h2 class="subtitle">TODAY</h2>
-              <span class="subtitle--date">{{todayMissionList.Date}}</span>
-            </ion-label>
-          </ion-item>
-
-          <ion-card class="card-today" (click)="openDetail(item.MissionNumber)" tappable *ngFor="let item of todayMissionList.Data">
-            <ion-item lines="none">
-              <ion-label class="card--title">
-                <span>{{item.ClientName}}</span>
-              </ion-label>
-              <ion-label class="card--title-time">
-                <span>{{item.MissionTimeOnlyHour}}</span>
-              </ion-label>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label class="card--address">
-                <span>{{item.ClientAddress}}</span>
-              </ion-label>
-            </ion-item>
-          </ion-card>
-
-        </ion-list>
-      </ion-slide>
-
-      <!-- NEXT MISSION SLIDE -->
       <ion-slide>
         <ion-list>
 
@@ -111,6 +47,72 @@
           </ion-card>
 
         </ion-list>
+      </ion-slide>
+
+      <!-- TODAY SLIDE -->
+      <ion-slide>
+        <ion-content>
+            <ion-list class="ion-list--no-background">
+    
+              <ion-item class="ion-item--no-background" lines="none">
+                <ion-label>
+                  <h2 class="subtitle">TODAY</h2>
+                  <span class="subtitle--date">{{todayMissionList.Date}}</span>
+                </ion-label>
+              </ion-item>
+    
+              <ion-card class="card-today" (click)="openDetail(item.MissionNumber)" tappable *ngFor="let item of todayMissionList.Data">
+                <ion-item lines="none">
+                  <ion-label class="card--title">
+                    <span>{{item.ClientName}}</span>
+                  </ion-label>
+                  <ion-label class="card--title-time">
+                    <span>{{item.MissionTimeOnlyHour}}</span>
+                  </ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label class="card--address">
+                    <span>{{item.ClientAddress}}</span>
+                  </ion-label>
+                </ion-item>
+              </ion-card>
+    
+            </ion-list>
+        </ion-content>
+      </ion-slide>
+
+      <!-- FUTURE SLIDE -->
+      <ion-slide>
+        <ion-content>
+          <ion-list class="ion-list--no-background" *ngFor="let missionDay of futureMissionList">
+        
+            <ion-item class="ion-item--no-background" lines="none">
+              <ion-label>
+                <h2 class="subtitle">{{missionDay.DayString.toUpperCase()}}</h2>
+                <span class="subtitle--date">{{missionDay.DateString.toUpperCase()}}</span>
+              </ion-label>
+            </ion-item>
+
+            <ion-card class="card-done" *ngFor="let missionItem of missionDay.Data">
+              <ion-item lines="none">
+                <ion-label class="card--title">
+                  <span>{{missionItem.ClientName}}</span>
+                </ion-label>
+                <ion-label class="card--title-time">
+                  <span>{{missionItem.MissionTimeOnlyHour}}</span>
+                </ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label class="card--address">
+                  <span>{{missionItem.ClientAddress}}</span>
+                </ion-label>
+              </ion-item>
+            </ion-card>
+
+          </ion-list>
+
+          <br>
+        </ion-content>
       </ion-slide>
 
     </ion-slides>
