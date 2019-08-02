@@ -21,8 +21,7 @@ export class DetailPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data);
-    
+   
   }
 
   dismiss() {

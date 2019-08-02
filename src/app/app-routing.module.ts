@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', loadChildren: './pages/home/home.module#HomePageModule' },
   { path: 'test', loadChildren: './pages/test/test.module#TestPageModule' },
   { path: 'modal-page', loadChildren: './pages/modal-page/modal-page.module#ModalPagePageModule' },
