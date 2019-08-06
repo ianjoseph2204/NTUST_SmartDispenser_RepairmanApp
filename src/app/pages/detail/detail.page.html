@@ -90,6 +90,17 @@
       </ion-label>
     </ion-item>
 
+    <ion-item *ngIf="doneMission">
+      <ion-label>
+        <p class="item--title">REPORT PICTURES</p>
+        <img
+          *ngFor="let images of data.ReportImages; let i=index"
+          [src]="images.ReportImage"
+          alt="image-{{i+1}}"
+          class="image-report" />
+      </ion-label>
+    </ion-item>
+
   </ion-list>
 </ion-content>
 <ion-footer>

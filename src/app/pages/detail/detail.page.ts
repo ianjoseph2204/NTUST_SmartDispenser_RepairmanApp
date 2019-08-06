@@ -9,6 +9,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 export class DetailPage implements OnInit {
 
   data: any;
+  doneMission: boolean;
   Arrived = false;
   inputCamera = false;
 
@@ -18,10 +19,12 @@ export class DetailPage implements OnInit {
     public navParams: NavParams
   ) {
     this.data = navParams.get('Data');
+    this.doneMission = navParams.get('DoneMission');
   }
 
   ngOnInit() {
-   
+   console.log(this.data);
+   console.log(this.doneMission);
   }
 
   dismiss() {
