@@ -24,6 +24,9 @@ export class HomePage {
   missionTodayDate: string;
   fragmentTitle: string;
   device_id: string;
+  employee_id: string;
+  loadReady: boolean = false;
+  currentTime: string;
 
   // constant array
   dayNameArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -68,10 +71,23 @@ export class HomePage {
   /**
    * This function is to display modal for every item
    */
-  async openDetail(missionNumber: number) {
+  async openDetail(missionNumber: number, isDoneMission: boolean) {
 
-    let missionList = this.todayMissionList['Data'];
+    let missionList = [];
     let getMission: any;
+
+    if (isDoneMission) {
+      for (let i = 0 ; i < this.doneMissionList.length ; i++) {
+
+        let dataInsideDoneMissionList = this.doneMissionList[i]['Data'];
+        for (let j = 0 ; j < dataInsideDoneMissionList.length ; j++) {
+
+          missionList.push(dataInsideDoneMissionList[j]);
+        }
+      }
+    } else {
+      missionList = this.todayMissionList['Data'];
+    }
 
     for (let i = 0 ; i < missionList.length ; i++) {
 
@@ -83,7 +99,8 @@ export class HomePage {
 
     let buildNewMission = {
       'Date': this.missionTodayDate,
-      'Data': getMission
+      'Data': getMission,
+      'DoneMission': isDoneMission
     }
 
     const modal = await this.modalController.create({
@@ -144,7 +161,7 @@ export class HomePage {
    * 
    * @returns   Date    Date object converted result from time
    */
-  convertApiTimeToDate (time: any) {
+  convertApiTimeToDate (time: string) {
     // time passed is String, construct into Date format
     // time example from json: "2019-03-08 16:32:00"
     // format: YEAR-MONTH-DATEOFMONTH HOUR:MINUTE:SECOND
@@ -196,6 +213,36 @@ export class HomePage {
     );
 
     return newDate;
+  }
+
+  /**
+   * 
+   * @param date 
+   */
+  convertDateToApiTimeFormat (date: Date) {
+
+    let year = date.getFullYear();
+    let month: any = date.getMonth() + 1;
+    if (month < 10){
+      let lastMonth = month;
+      month = "0" + lastMonth;
+    }
+    else
+      month = date.getMonth() + 1;
+
+    let dateOfMonth: any = date.getDate();
+    if (dateOfMonth < 10)
+      dateOfMonth = "0" + date.getDate();
+    else
+      dateOfMonth = date.getDate();
+    
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+
+    let buildApiTimeFormat = year + "-" + month + "-" + dateOfMonth + " " + hour + ":" + minute + ":" + second;
+
+    return buildApiTimeFormat;
   }
 
   /**
@@ -264,26 +311,49 @@ export class HomePage {
     return arrayData;
   }
 
-  async ngOnInit() {
+  async ngOnInit() {    
 
     // initialize
-    this.device_id = "T4_04_01";
+    this.loadReady = false;
     this.fragmentTitle = this.fragmentTitleArray[1];
+    this.currentTime = this.convertDateToApiTimeFormat(new Date());
+
+    // dummy data
+    this.device_id = "MA_03_01";
+    this.employee_id = "1";
+
+    ///////////////////////////////////////////
+    // SET TEST 1                            //
+    ///////////////////////////////////////////
 
     // get raw data
-    let doneMissionRawData = this.getRawDataDoneMission(this.device_id);
-    let todayMissionRawData = this.getRawDataTodayMission(this.device_id);
-    let futureMissionRawData = this.getRawDataFutureMission(this.device_id);
+    // let doneMissionRawData = this.getRawDataDoneMission(this.device_id);
+    // let todayMissionRawData = this.getRawDataTodayMission(this.device_id);
+    // let futureMissionRawData = this.getRawDataFutureMission(this.device_id);
 
     // process the data
-    let processedDoneMission = await this.processDataDoneMission(doneMissionRawData['Data']);
-    console.log(processedDoneMission);
+    // let processedDoneMission = await this.processDataDoneMission(doneMissionRawData['Data']);
+    // console.log(processedDoneMission);
 
-    let processedTodayMission = await this.processDataTodayMission(todayMissionRawData['Data']);
-    console.log(processedTodayMission);
+    // let processedTodayMission = await this.processDataTodayMission(todayMissionRawData['Data']);
+    // console.log(processedTodayMission);
 
-    let processedFutureMission = await this.processDataFutureMission(futureMissionRawData['Data']);
-    console.log(processedFutureMission);
+    // let processedFutureMission = await this.processDataFutureMission(futureMissionRawData['Data']);
+    // console.log(processedFutureMission);
+
+    ///////////////////////////////////////////
+    // SET TEST 2                            //
+    ///////////////////////////////////////////
+
+    let doneMissionRawData = await this.api.getAssignmentDone(this.device_id, this.employee_id);
+    let processedDoneMission = await this.processDataDoneMission(doneMissionRawData);
+
+    let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);    
+    let processedTodayMission = await this.processDataTodayMission(todayMissionRawData);
+
+    let futureMissionRawData = await this.api.getAssignmentNext(this.device_id, this.employee_id, this.currentTime);
+    let processedFutureMission = await this.processDataFutureMission(futureMissionRawData);
+
 
     // set data into array
     this.doneMissionList = processedDoneMission;
@@ -293,6 +363,8 @@ export class HomePage {
     // this.setDataNext();
     // this.setDataToday();
     // this.setDataDone();
+
+    this.loadReady = true;
   }
 
   /**
@@ -305,7 +377,7 @@ export class HomePage {
     let dataAddOn = [];
     for (let i = 0 ; i < dataJson.length ; i++) {
       let Data = dataJson[i];
-      let dateDetails = this.getDateDetail(Data['RepairDoneTime']);
+      let dateDetails = this.getDateDetail(Data['RepairCallTime']);
       let machineDetails = await this.api.getDispenserDetail(Data['Device_ID']);
       
       let newJson = {
@@ -341,11 +413,13 @@ export class HomePage {
           ReportImages.push({"ReportImage": this.convertBase64ToImage(getData['Complete_Source'])});
         }
 
-        let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getData['RepairDoneTime']);
+        console.log(getData['RepairCallTime']);
+
+        let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getData['RepairCallTime']);
         let newData = {
           "ClientName": "..." ,
           "ClientAddress": "..." ,
-          "MissionTime": getData['RepairDoneTime'] ,
+          "MissionTime": getData['RepairCallTime'] ,
           "MissionTimeOnlyHour": MissionTimeOnlyHour ,
           "ClientPhone": "..." ,
           "ClientContactPerson": "..." ,
@@ -392,7 +466,7 @@ export class HomePage {
     let dataAddOn = [];
     for (let i = 0 ; i < dataJson.length ; i++) {
       let Data = dataJson[i];
-      let dateDetails = this.getDateDetail(Data['RepairDoneTime']);
+      let dateDetails = this.getDateDetail(Data['RepairCallTime']);
       let machineDetails = await this.api.getDispenserDetail(Data['Device_ID']);
       
       let newJson = {
@@ -409,11 +483,11 @@ export class HomePage {
     for (let i = 0 ; i < dataAddOn.length ; i++) {
       let getObject = dataAddOn[i];
 
-      let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getObject['Data']['RepairDoneTime']);
+      let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getObject['Data']['RepairCallTime']);
       let newData = {
         "ClientName": "..." ,
         "ClientAddress": "..." ,
-        "MissionTime": getObject['Data']['RepairDoneTime'] ,
+        "MissionTime": getObject['Data']['RepairCallTime'] ,
         "MissionTimeOnlyHour": MissionTimeOnlyHour ,
         "ClientPhone": "..." ,
         "ClientContactPerson": "..." ,
@@ -449,7 +523,7 @@ export class HomePage {
     let dataAddOn = [];
     for (let i = 0 ; i < dataJson.length ; i++) {
       let Data = dataJson[i];
-      let dateDetails = this.getDateDetail(Data['RepairDoneTime']);
+      let dateDetails = this.getDateDetail(Data['RepairCallTime']);
       let machineDetails = await this.api.getDispenserDetail(Data['Device_ID']);
       
       let newJson = {
@@ -473,11 +547,11 @@ export class HomePage {
       for (let j = 0 ; j < getObject['Data'].length ; j++) {        
         let getData = getObject['Data'][j]['Data'];
         
-        let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getData['RepairDoneTime']);
+        let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getData['RepairCallTime']);
         let newData = {
           "ClientName": "..." ,
           "ClientAddress": "..." ,
-          "MissionTime": getData['RepairDoneTime'] ,
+          "MissionTime": getData['RepairCallTime'] ,
           "MissionTimeOnlyHour": MissionTimeOnlyHour ,
           "ClientPhone": "..." ,
           "ClientContactPerson": "..." ,
