@@ -137,4 +137,60 @@ export class UnitConverter {
 
     return newDate;
   }
+
+  /**
+   * This function is to convert base64 string to image
+   * and return the string which can be display using
+   * [src].
+   * 
+   * @param base64 
+   */
+  public static convertBase64ToImage (base64: string) {
+    let addOn = "data:image/jpeg;base64,";
+    return addOn + base64;
+  }
+
+  /**
+   * 
+   * @param dateString 
+   */
+  public static convertDateStringToHourMinuteOnly (dateString: string) {
+    let dateStringSplit = dateString.split(" ");
+    let getHour = dateStringSplit[1];
+
+    let hourSplit = getHour.split(":");
+    let hourMinute = hourSplit[0] + ":" + hourSplit[1];
+
+    return hourMinute;
+  }
+
+  /**
+   * 
+   * @param date 
+   */
+  public static convertDateToApiTimeFormat (date: Date) {
+
+    let year = date.getFullYear();
+    let month: any = date.getMonth() + 1;
+    if (month < 10){
+      let lastMonth = month;
+      month = "0" + lastMonth;
+    }
+    else
+      month = date.getMonth() + 1;
+
+    let dateOfMonth: any = date.getDate();
+    if (dateOfMonth < 10)
+      dateOfMonth = "0" + date.getDate();
+    else
+      dateOfMonth = date.getDate();
+    
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+
+    let buildApiTimeFormat = year + "-" + month + "-" + dateOfMonth + " " + hour + ":" + minute + ":" + second;
+
+    return buildApiTimeFormat;
+  }
 }
