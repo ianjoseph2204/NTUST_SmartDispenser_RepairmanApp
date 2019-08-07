@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-import { ModalController, IonSlides } from '@ionic/angular';
-import { DetailPage } from '../detail/detail.page';
-import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api.service';
-import { PreferenceManagerService } from 'src/app/services/PreferenceManager/preference-manager.service';
-import { UnitConverter } from 'src/app/classes/UnitConverter/unit-converter';
+import {Component, ViewChild} from '@angular/core';
+import {IonSlides, ModalController} from '@ionic/angular';
+import {DetailPage} from '../detail/detail.page';
+import {DispenserAPIService} from 'src/app/services/DispenserAPI/dispenser-api.service';
+import {PreferenceManagerService} from 'src/app/services/PreferenceManager/preference-manager.service';
+import {UnitConverter} from 'src/app/classes/UnitConverter/unit-converter';
 
 @Component({
   selector: 'app-home',
@@ -91,7 +91,7 @@ export class HomePage {
       'Date': this.missionTodayDate,
       'Data': getMission,
       'DoneMission': isDoneMission
-    }
+    };
 
     const modal = await this.modalController.create({
       component: DetailPage,
@@ -99,7 +99,7 @@ export class HomePage {
       cssClass: 'my-custom-modal-css'
     });
 
-    modal.present();
+    await modal.present();
   }
 
   /**
@@ -118,13 +118,11 @@ export class HomePage {
     let getDate = splitDate[0];
     
     let splitDateDetails = getDate.split("-");
-    let result = {
+    return {
       'Year': splitDateDetails[0],
       'Month': splitDateDetails[1],
       'Day': splitDateDetails[2]
-    }
-
-    return result;
+    };
   }
 
   /**
@@ -239,7 +237,7 @@ export class HomePage {
     }
 
     let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);
-    console.log(todayMissionRawData)
+    console.log(todayMissionRawData);
     if (todayMissionRawData.length !== 0) {
       this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
     } else {
@@ -320,7 +318,7 @@ export class HomePage {
           "MissionNumber": getData['MissionNumber'] ,
           "ReportIndex": getData['Complete_Index'] ,
           "ReportImages": ReportImages
-        }
+        };
 
         Data.push(newData);
       }
@@ -386,18 +384,16 @@ export class HomePage {
         "Repairman": getObject['Data']['Maintainer'] ,
         "ClientNumber": "..." ,
         "MissionNumber": getObject['Data']['MissionNumber'] ,
-      }
+      };
 
       resultArray.push(newData);
     }
 
     let newDate = this.monthNameArray[dataAddOn[0]['dateDetails']['Month'] - 1] + " " + dataAddOn[0]['dateDetails']['Day'];
-    let resultObject = {
+    return {
       "Date": newDate,
       "Data": resultArray
-    }
-
-    return resultObject;
+    };
   }
 
   /**
@@ -471,586 +467,6 @@ export class HomePage {
     }
 
     return resultArray;
-  }
-
-  setDataDone () {
-
-    // initialize
-    let data = [
-      {
-        'DateString': "July 24",
-        'DayString': "Wednesday",
-        'Date': "...",
-        'Data': [
-          {
-            'ClientName': "Client No. 001",
-            'ClientAddress': "Taipei, Keelung Rd. No. 01",
-            'MissionTime': "2019-07-01 12:00:00",
-            'MissionTimeOnlyHour': "12:00",
-            'ClientPhone': "+886 123 345 901",
-            'ClientContactPerson': "Mr. 010",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132401",
-            'MissionNumber': "051",
-            'ReportIndex': 3,
-            'ReportImages': [
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              },
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              },
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              }
-            ]
-          },
-          {
-            'ClientName': "Client No. 002",
-            'ClientAddress': "Taipei, Keelung Rd. No. 02",
-            'MissionTime': "2019-07-01 18:00:00",
-            'MissionTimeOnlyHour': "18:00",
-            'ClientPhone': "+886 123 345 902",
-            'ClientContactPerson': "Mr. 020",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132402",
-            'MissionNumber': "052",
-            'ReportIndex': 2,
-            'ReportImages': [
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              },
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              }
-            ]
-          }
-        ]
-      },
-      {
-        'DateString': "August 3",
-        'DayString': "Saturday",
-        'Date': "...",
-        'Data': [
-          {
-            'ClientName': "Client No. 003",
-            'ClientAddress': "Taipei, Keelung Rd. No. 03",
-            'MissionTime': "2019-07-01 15:00:00",
-            'MissionTimeOnlyHour': "15:00",
-            'ClientPhone': "+886 123 345 903",
-            'ClientContactPerson': "Mr. 030",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132403",
-            'MissionNumber': "053",
-            'ReportIndex': 3,
-            'ReportImages': [
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              },
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              },
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              }
-            ]
-          }
-        ]
-      },
-      {
-        'DateString': "August 4",
-        'DayString': "Sunday",
-        'Date': "...",
-        'Data': [
-          {
-            'ClientName': "Client No. 004",
-            'ClientAddress': "Taipei, Keelung Rd. No. 04",
-            'MissionTime': "2019-07-01 12:00:00",
-            'MissionTimeOnlyHour': "12:00",
-            'ClientPhone': "+886 123 345 904",
-            'ClientContactPerson': "Mr. 040",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132404",
-            'MissionNumber': "054",
-            'ReportIndex': 1,
-            'ReportImages': [
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              }
-            ]
-          },
-          {
-            'ClientName': "Client No. 005",
-            'ClientAddress': "Taipei, Keelung Rd. No. 05",
-            'MissionTime': "2019-07-01 10:00:00",
-            'MissionTimeOnlyHour': "10:00",
-            'ClientPhone': "+886 123 345 905",
-            'ClientContactPerson': "Mr. 050",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132405",
-            'MissionNumber': "055",
-            'ReportIndex': 2,
-            'ReportImages': [
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              },
-              {
-                'ReportImage': this.convertBase64ToImage(this.imagetest)
-              }
-            ]
-          }
-        ]
-      }
-    ]
-
-    this.doneMissionList = data;
-  }
-  setDataNext () {
-
-    // initialize
-    let data = [
-      {
-        'DateString': "August 1",
-        'DayString': "Thursday",
-        'Date': "...",
-        'Data': [
-          {
-            'ClientName': "Client No. 001",
-            'ClientAddress': "Taipei, Keelung Rd. No. 01",
-            'MissionTime': "2019-07-01 12:00:00",
-            'MissionTimeOnlyHour': "12:00",
-            'ClientPhone': "+886 123 345 901",
-            'ClientContactPerson': "Mr. 010",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132401",
-            'MissionNumber': "051"
-          },
-          {
-            'ClientName': "Client No. 002",
-            'ClientAddress': "Taipei, Keelung Rd. No. 02",
-            'MissionTime': "2019-07-01 18:00:00",
-            'MissionTimeOnlyHour': "18:00",
-            'ClientPhone': "+886 123 345 902",
-            'ClientContactPerson': "Mr. 020",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132402",
-            'MissionNumber': "052"
-          }
-        ]
-      },
-      {
-        'DateString': "August 3",
-        'DayString': "Saturday",
-        'Date': "...",
-        'Data': [
-          {
-            'ClientName': "Client No. 003",
-            'ClientAddress': "Taipei, Keelung Rd. No. 03",
-            'MissionTime': "2019-07-01 15:00:00",
-            'MissionTimeOnlyHour': "15:00",
-            'ClientPhone': "+886 123 345 903",
-            'ClientContactPerson': "Mr. 030",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132403",
-            'MissionNumber': "053"
-          }
-        ]
-      },
-      {
-        'DateString': "August 4",
-        'DayString': "Sunday",
-        'Date': "...",
-        'Data': [
-          {
-            'ClientName': "Client No. 004",
-            'ClientAddress': "Taipei, Keelung Rd. No. 04",
-            'MissionTime': "2019-07-01 12:00:00",
-            'MissionTimeOnlyHour': "12:00",
-            'ClientPhone': "+886 123 345 904",
-            'ClientContactPerson': "Mr. 040",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132404",
-            'MissionNumber': "054"
-          },
-          {
-            'ClientName': "Client No. 005",
-            'ClientAddress': "Taipei, Keelung Rd. No. 05",
-            'MissionTime': "2019-07-01 10:00:00",
-            'MissionTimeOnlyHour': "10:00",
-            'ClientPhone': "+886 123 345 905",
-            'ClientContactPerson': "Mr. 050",
-            'MachineType': "UN-1321AG-1-L",
-            'MachineNumber': "456701",
-            'ErrorCode': "1",
-            'ProblemOccured': "Your Lie in April 1st",
-            'NotificationTime': "2019-30-29 11:41:00",
-            'Repairman': "198503302003121001",
-            'ClientNumber': "132405",
-            'MissionNumber': "055"
-          }
-        ]
-      }
-    ]
-
-    this.futureMissionList = data;
-  }
-  setDataToday () {
-    
-    // initialize current date
-    this.todayDate = new Date();
-    this.missionTodayDate = (this.monthNameArray[this.todayDate.getMonth()] + " " + this.todayDate.getDate()).toUpperCase();    
-    let tempArray = [];
-
-    // create dummy item for today mission
-    for (let i = 0 ; i < 5 ; i++) {
-
-      let number = i + 1;
-      let month = this.todayDate.getMonth() + 1;
-
-      let item = {
-        'ClientName': "Client No.00" + number,
-        'ClientAddress': "Taipei, Keelung Rd. No. " + number,
-        'MissionTime': this.todayDate.getFullYear() + "-" + month + "-" + this.todayDate.getDate() + " " + "23:59:59",
-        'MissionTimeOnlyHour': "23:59",
-        'ClientPhone': "+886 123 345 90" + number,
-        'ClientContactPerson': "Mr. 00" + number,
-        'MachineType': "UN-1321AG-" + number + "-L",
-        'MachineNumber': "45670" + number,
-        'ErrorCode': "1",
-        'ProblemOccured': "Your Lie in April 1st",
-        'NotificationTime': "2019-30-29 11:41:00",
-        'Repairman': "198503302003121001",
-        'ClientNumber': "13240" + number,
-        'MissionNumber': "05"+ number
-      };
-
-      tempArray.push(item);
-    }
-
-    this.todayMissionList = {
-      'Date': this.missionTodayDate,
-      'Data': tempArray
-    };
-  }
-
-  getRawDataDoneMission (device_id: string) {
-    
-    // generate raw dummy data
-    let rawData = {
-        "code":200,
-        "msg":"success",
-        "success":"true",
-        "result":"ok",
-        "Data":[
-            {
-                "MissionNumber": 1 ,
-                "Device_ID": "T4_04_01" ,
-                "Email": "test@example.com" ,
-                "ErrorType": 1 ,
-                "Description": "Button does not respond" ,
-                "Status": 7 ,
-                "UploadTime": "2019-03-08 12:00:00" ,
-                "NotifyTime": "2019-03-09 08:00:00" ,
-                "ConfirmTIme": "2019-03-09 10:00:00" ,
-                "RepairCallTime": "2019-03-09 16:00:00" ,
-                "RepairDoneTime": "2019-03-10 10:00:00" ,
-                "MaintenanceDoneTime": "2019-03-10 11:00:00" ,
-                "CompleteTime": "2019-03-10 12:00:00" ,
-                "Maintainer": "Mr. Johnny" ,
-                "Maintainer_ID": "1234567890" ,
-                "Result": "Old button, replace with new one" ,
-                "Index": 0 ,
-                "Source": null ,
-                "Source2": null ,
-                "Source3": null ,
-                "ArriveTime": "2019-03-10 08:00:00" ,
-                "Complete_Index": 1 ,
-                "Complete_Source": this.imagetest ,
-                "Complete_Source2": null ,
-                "Complete_Source3": null ,
-                "Archive": false ,
-                "Delete": false ,
-            },
-            {
-                "MissionNumber": 2 ,
-                "Device_ID": "MA_03_01" ,
-                "Email": "test@example.com" ,
-                "ErrorType": 1 ,
-                "Description": "Button does not respond" ,
-                "Status": 7 ,
-                "UploadTime": "2019-03-08 12:00:00" ,
-                "NotifyTime": "2019-03-09 08:00:00" ,
-                "ConfirmTIme": "2019-03-09 10:00:00" ,
-                "RepairCallTime": "2019-03-09 16:00:00" ,
-                "RepairDoneTime": "2019-03-10 18:00:00" ,
-                "MaintenanceDoneTime": "2019-03-10 20:00:00" ,
-                "CompleteTime": "2019-03-10 22:00:00" ,
-                "Maintainer": "Mr. Johnny" ,
-                "Maintainer_ID": "1234567890" ,
-                "Result": "Old button, replace with new one" ,
-                "Index": 0 ,
-                "Source": null ,
-                "Source2": null ,
-                "Source3": null ,
-                "ArriveTime": "2019-03-10 19:00:00" ,
-                "Complete_Index": 3 ,
-                "Complete_Source": this.imagetest ,
-                "Complete_Source2": this.imagetest ,
-                "Complete_Source3": this.imagetest ,
-                "Archive": false ,
-                "Delete": false ,
-            },
-            {
-              "MissionNumber": 3 ,
-              "Device_ID": "EE_08_01" ,
-              "Email": "test@example.com" ,
-              "ErrorType": 1 ,
-              "Description": "Button does not respond" ,
-              "Status": 7 ,
-              "UploadTime": "2019-03-18 12:00:00" ,
-              "NotifyTime": "2019-03-19 08:00:00" ,
-              "ConfirmTIme": "2019-03-19 10:00:00" ,
-              "RepairCallTime": "2019-03-19 16:00:00" ,
-              "RepairDoneTime": "2019-03-20 10:00:00" ,
-              "MaintenanceDoneTime": "2019-03-20 11:00:00" ,
-              "CompleteTime": "2019-03-20 12:00:00" ,
-              "Maintainer": "Mr. Johnny" ,
-              "Maintainer_ID": "1234567890" ,
-              "Result": "Old button, replace with new one" ,
-              "Index": 1 ,
-              "Source": this.imagetest ,
-              "Source2": null ,
-              "Source3": null ,
-              "ArriveTime": "2019-03-10 08:00:00" ,
-              "Complete_Index": 2 ,
-              "Complete_Source": this.imagetest ,
-              "Complete_Source2": this.imagetest ,
-              "Complete_Source3": null ,
-              "Archive": false ,
-              "Delete": false ,
-          }
-        ]
-    };
-
-    return rawData;
-  }
-  getRawDataTodayMission (device_id: string) {
-    
-    // generate raw dummy data
-    let rawData = {
-        "code":200,
-        "msg":"success",
-        "success":"true",
-        "result":"ok",
-        "Data":[
-            {
-                "MissionNumber": 11 ,
-                "Device_ID": device_id ,
-                "Email": "test@example.com" ,
-                "ErrorType": 4 ,
-                "Description": "Button does not respond" ,
-                "Status": 4 ,
-                "UploadTime": "2019-03-24 12:00:00" ,
-                "NotifyTime": "2019-03-25 08:00:00" ,
-                "ConfirmTIme": "2019-03-25 10:00:00" ,
-                "RepairCallTime": "2019-03-25 16:00:00" ,
-                "RepairDoneTime": "2019-03-26 10:00:00" ,
-                "MaintenanceDoneTime": "" ,
-                "CompleteTime": "" ,
-                "Maintainer": "Mr. Johnny" ,
-                "Maintainer_ID": "1234567890" ,
-                "Result": "Old button, replace with new one" ,
-                "Index": 0 ,
-                "Source": null ,
-                "Source2": null ,
-                "Source3": null ,
-                "ArriveTime": "" ,
-                "Complete_Index": 0 ,
-                "Complete_Source": null ,
-                "Complete_Source2": null ,
-                "Complete_Source3": null ,
-                "Archive": false ,
-                "Delete": false ,
-            },            
-            {
-              "MissionNumber": 12 ,
-              "Device_ID": device_id ,
-              "Email": "test@example.com" ,
-              "ErrorType": 4 ,
-              "Description": "Button does not respond" ,
-              "Status": 7 ,
-              "UploadTime": "2019-03-24 12:00:00" ,
-              "NotifyTime": "2019-03-25 08:00:00" ,
-              "ConfirmTIme": "2019-03-25 10:00:00" ,
-              "RepairCallTime": "2019-03-25 16:00:00" ,
-              "RepairDoneTime": "2019-03-26 16:00:00" ,
-              "MaintenanceDoneTime": "" ,
-              "CompleteTime": "" ,
-              "Maintainer": "Mr. Johnny" ,
-              "Maintainer_ID": "1234567890" ,
-              "Result": "Old button, replace with new one" ,
-              "Index": 0 ,
-              "Source": null ,
-              "Source2": null ,
-              "Source3": null ,
-              "ArriveTime": "" ,
-              "Complete_Index": 0 ,
-              "Complete_Source": null ,
-              "Complete_Source2": null ,
-              "Complete_Source3": null ,
-              "Archive": false ,
-              "Delete": false ,
-          }
-        ]
-    };
-
-    return rawData;
-  }
-  getRawDataFutureMission (device_id: string) {
-    
-    // generate raw dummy data
-    let rawData = {
-        "code":200,
-        "msg":"success",
-        "success":"true",
-        "result":"ok",
-        "Data":[
-              {
-                  "MissionNumber": 21 ,
-                  "Device_ID": device_id ,
-                  "Email": "test@example.com" ,
-                  "ErrorType": 1 ,
-                  "Description": "Button does not respond" ,
-                  "Status": 4 ,
-                  "UploadTime": "2019-03-24 12:00:00" ,
-                  "NotifyTime": "2019-03-25 08:00:00" ,
-                  "ConfirmTIme": "2019-03-25 10:00:00" ,
-                  "RepairCallTime": "2019-03-25 16:00:00" ,
-                  "RepairDoneTime": "2019-03-30 10:00:00" ,
-                  "MaintenanceDoneTime": "" ,
-                  "CompleteTime": "" ,
-                  "Maintainer": "Mr. Johnny" ,
-                  "Maintainer_ID": "1234567890" ,
-                  "Result": "Old button, replace with new one" ,
-                  "Index": 0 ,
-                  "Source": null ,
-                  "Source2": null ,
-                  "Source3": null ,
-                  "ArriveTime": "" ,
-                  "Complete_Index": 0 ,
-                  "Complete_Source": null ,
-                  "Complete_Source2": null ,
-                  "Complete_Source3": null ,
-                  "Archive": false ,
-                  "Delete": false ,
-              },            
-              {
-                "MissionNumber": 22 ,
-                "Device_ID": device_id ,
-                "Email": "test@example.com" ,
-                "ErrorType": 1 ,
-                "Description": "Button does not respond" ,
-                "Status": 4 ,
-                "UploadTime": "2019-03-24 12:00:00" ,
-                "NotifyTime": "2019-03-25 08:00:00" ,
-                "ConfirmTIme": "2019-03-25 10:00:00" ,
-                "RepairCallTime": "2019-03-25 16:00:00" ,
-                "RepairDoneTime": "2019-04-02 10:00:00" ,
-                "MaintenanceDoneTime": "" ,
-                "CompleteTime": "" ,
-                "Maintainer": "Mr. Johnny" ,
-                "Maintainer_ID": "1234567890" ,
-                "Result": "Old button, replace with new one" ,
-                "Index": 0 ,
-                "Source": null ,
-                "Source2": null ,
-                "Source3": null ,
-                "ArriveTime": "" ,
-                "Complete_Index": 0 ,
-                "Complete_Source": null ,
-                "Complete_Source2": null ,
-                "Complete_Source3": null ,
-                "Archive": false ,
-                "Delete": false ,
-            },
-            {
-              "MissionNumber": 23 ,
-              "Device_ID": device_id ,
-              "Email": "test@example.com" ,
-              "ErrorType": 1 ,
-              "Description": "Button does not respond" ,
-              "Status": 4 ,
-              "UploadTime": "2019-03-24 12:00:00" ,
-              "NotifyTime": "2019-03-25 08:00:00" ,
-              "ConfirmTIme": "2019-03-25 10:00:00" ,
-              "RepairCallTime": "2019-03-25 16:00:00" ,
-              "RepairDoneTime": "2019-04-02 10:00:00" ,
-              "MaintenanceDoneTime": "" ,
-              "CompleteTime": "" ,
-              "Maintainer": "Mr. Johnny" ,
-              "Maintainer_ID": "1234567890" ,
-              "Result": "Old button, replace with new one" ,
-              "Index": 0 ,
-              "Source": null ,
-              "Source2": null ,
-              "Source3": null ,
-              "ArriveTime": "" ,
-              "Complete_Index": 0 ,
-              "Complete_Source": null ,
-              "Complete_Source2": null ,
-              "Complete_Source3": null ,
-              "Archive": false ,
-              "Delete": false ,
-          }
-        ]
-    };
-
-    return rawData;
   }
 
   // test image to perform dummy data for doneMissionList
