@@ -232,21 +232,22 @@ export class HomePage {
     ///////////////////////////////////////////
 
     let doneMissionRawData = await this.api.getAssignmentDone(this.device_id, this.employee_id);
-    if (doneMissionRawData !== []) {
+    if (doneMissionRawData.length !== 0) {
       this.doneMissionList = await this.processDataDoneMission(doneMissionRawData);
     } else {
       this.doneMissionList = null;
     }
 
     let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);
-    if (todayMissionRawData !== []) {
+    console.log(todayMissionRawData)
+    if (todayMissionRawData.length !== 0) {
       this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
     } else {
       this.todayMissionList = null;
     }
 
     let futureMissionRawData = await this.api.getAssignmentNext(this.device_id, this.employee_id, this.currentTime);
-    if (futureMissionRawData !== []) {
+    if (futureMissionRawData.length !== 0) {
       this.futureMissionList = await this.processDataFutureMission(futureMissionRawData);
     } else {
       this.futureMissionList = null;
