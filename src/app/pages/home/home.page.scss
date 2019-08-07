@@ -113,13 +113,16 @@ ion-card.card-done {
 
 .card--done--image-report {
     float: left;
-    max-height: 50px;
+    max-width: 75px;
     width: auto;
     margin-right: 8px;
     display: block;
 }
 
 .no-data {
+    transform: translateY(80%);
+    position: relative;
+    height: 50%;
     font-size: 20px;
-    margin: 8px;
+    color: rgba($color: #000000, $alpha: 0.5)
 }

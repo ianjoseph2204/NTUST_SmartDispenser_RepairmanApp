@@ -3,6 +3,7 @@ import { ModalController, IonSlides } from '@ionic/angular';
 import { DetailPage } from '../detail/detail.page';
 import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api.service';
 import { PreferenceManagerService } from 'src/app/services/PreferenceManager/preference-manager.service';
+import { UnitConverter } from 'src/app/classes/UnitConverter/unit-converter';
 
 @Component({
   selector: 'app-home',
@@ -17,9 +18,10 @@ export class HomePage {
   };
 
   // field variable
-  doneMissionList = [];
-  todayMissionList: any;
-  futureMissionList = [];
+  doneMissionList = null;
+  todayMissionList = null;
+  futureMissionList = null;
+
   todayDate: any;
   missionTodayDate: string;
   fragmentTitle: string;
@@ -54,18 +56,6 @@ export class HomePage {
     
     let index = await this.slides.getActiveIndex();
     this.fragmentTitle = this.fragmentTitleArray[index];
-  }
-
-  /**
-   * This function is to convert base64 string to image
-   * and return the string which can be display using
-   * [src].
-   * 
-   * @param base64 
-   */
-  convertBase64ToImage (base64: string) {
-    let addOn = "data:image/jpeg;base64,";
-    return addOn + base64;
   }
   
   /**
@@ -139,114 +129,6 @@ export class HomePage {
 
   /**
    * 
-   * @param dateString 
-   */
-  getHourMinuteFromDateString (dateString: string) {
-    let dateStringSplit = dateString.split(" ");
-    let getHour = dateStringSplit[1];
-
-    let hourSplit = getHour.split(":");
-    let hourMinute = hourSplit[0] + ":" + hourSplit[1];
-
-    return hourMinute;
-  }
-
-  /**
-   * This function is to convert the time from the API into Date
-   * object in typescript library. The purpose is to create a new
-   * Date object with data from the API. This function will return
-   * Date object
-   * 
-   * @param     time    Value of time from API in "2019-03-08 16:32:00" format
-   * 
-   * @returns   Date    Date object converted result from time
-   */
-  convertApiTimeToDate (time: string) {
-    // time passed is String, construct into Date format
-    // time example from json: "2019-03-08 16:32:00"
-    // format: YEAR-MONTH-DATEOFMONTH HOUR:MINUTE:SECOND
-    
-    // split into DATE form and HOUR form
-    let splitTime = time.split(" ");
-
-      ////////////////////////////////////////////
-     //  DATE PART                             //
-    ////////////////////////////////////////////
-
-    // resultDate = YEAR-MONTH-DATEOFMONTH
-    let resultDate = splitTime[0];
-
-    // split DATE into YEAR, MONTH, and DATEOFMONTH
-    let splitDate = resultDate.split("-");
-
-    let resultYear = splitDate[0];
-    let resultMonth = splitDate[1] - 1;
-    let resultDateOfMonth = splitDate[2];
-
-      ////////////////////////////////////////////
-     //  HOUR PART                             //
-    ////////////////////////////////////////////
-
-    // resultHour = HOUR:MINUTE:SECOND
-    let resultHour = splitTime[1];
-
-    // split HOUR into HOUR, MINUTE, and SECOND
-    let splitHour = resultHour.split(":");
-
-    let resultHourC = splitHour[0];
-    let resultMinute = splitHour[1];
-    let resultSecond = splitHour[2];
-
-      ////////////////////////////////////////////
-     //  CONSTRUCT DATE PART                   //
-    ////////////////////////////////////////////
-
-    // now we get every component to construct date from String
-    let newDate = new Date(
-      resultYear,
-      resultMonth,
-      resultDateOfMonth,
-      resultHourC,
-      resultMinute,
-      resultSecond,
-      0
-    );
-
-    return newDate;
-  }
-
-  /**
-   * 
-   * @param date 
-   */
-  convertDateToApiTimeFormat (date: Date) {
-
-    let year = date.getFullYear();
-    let month: any = date.getMonth() + 1;
-    if (month < 10){
-      let lastMonth = month;
-      month = "0" + lastMonth;
-    }
-    else
-      month = date.getMonth() + 1;
-
-    let dateOfMonth: any = date.getDate();
-    if (dateOfMonth < 10)
-      dateOfMonth = "0" + date.getDate();
-    else
-      dateOfMonth = date.getDate();
-    
-    let hour = date.getHours();
-    let minute = date.getMinutes();
-    let second = date.getSeconds();
-
-    let buildApiTimeFormat = year + "-" + month + "-" + dateOfMonth + " " + hour + ":" + minute + ":" + second;
-
-    return buildApiTimeFormat;
-  }
-
-  /**
-   * 
    * @param dataArray 
    * 
    * @returns new array of json with grouping by date
@@ -316,11 +198,11 @@ export class HomePage {
     // initialize
     this.loadReady = false;
     this.fragmentTitle = this.fragmentTitleArray[1];
-    this.currentTime = this.convertDateToApiTimeFormat(new Date());
+    this.currentTime = UnitConverter.convertDateToApiTimeFormat(new Date());
 
     // dummy data
     this.device_id = "MA_03_01";
-    this.employee_id = "1";
+    this.employee_id = "1";    
 
     ///////////////////////////////////////////
     // SET TEST 1                            //
@@ -341,28 +223,34 @@ export class HomePage {
     // let processedFutureMission = await this.processDataFutureMission(futureMissionRawData['Data']);
     // console.log(processedFutureMission);
 
+    // this.setDataNext();
+    // this.setDataToday();
+    // this.setDataDone();
+
     ///////////////////////////////////////////
     // SET TEST 2                            //
     ///////////////////////////////////////////
 
     let doneMissionRawData = await this.api.getAssignmentDone(this.device_id, this.employee_id);
-    let processedDoneMission = await this.processDataDoneMission(doneMissionRawData);
+    if (doneMissionRawData !== []) {
+      this.doneMissionList = await this.processDataDoneMission(doneMissionRawData);
+    } else {
+      this.doneMissionList = null;
+    }
 
-    let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);    
-    let processedTodayMission = await this.processDataTodayMission(todayMissionRawData);
+    let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);
+    if (todayMissionRawData !== []) {
+      this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
+    } else {
+      this.todayMissionList = null;
+    }
 
     let futureMissionRawData = await this.api.getAssignmentNext(this.device_id, this.employee_id, this.currentTime);
-    let processedFutureMission = await this.processDataFutureMission(futureMissionRawData);
-
-
-    // set data into array
-    this.doneMissionList = processedDoneMission;
-    this.todayMissionList = processedTodayMission;
-    this.futureMissionList = processedFutureMission;
-
-    // this.setDataNext();
-    // this.setDataToday();
-    // this.setDataDone();
+    if (futureMissionRawData !== []) {
+      this.futureMissionList = await this.processDataFutureMission(futureMissionRawData);
+    } else {
+      this.futureMissionList = null;
+    }
 
     this.loadReady = true;
   }
@@ -403,19 +291,17 @@ export class HomePage {
         let ReportImages = [];
         
         if (getData['Complete_Index'] === 3) {
-          ReportImages.push({"ReportImage": this.convertBase64ToImage(getData['Complete_Source'])});
-          ReportImages.push({"ReportImage": this.convertBase64ToImage(getData['Complete_Source2'])});
-          ReportImages.push({"ReportImage": this.convertBase64ToImage(getData['Complete_Source3'])});
+          ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source'])});
+          ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source2'])});
+          ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source3'])});
         } else if (getData['Complete_Index'] === 2) {
-          ReportImages.push({"ReportImage": this.convertBase64ToImage(getData['Complete_Source'])});
-          ReportImages.push({"ReportImage": this.convertBase64ToImage(getData['Complete_Source2'])});
+          ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source'])});
+          ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source2'])});
         } else if (getData['Complete_Index'] === 1) {
-          ReportImages.push({"ReportImage": this.convertBase64ToImage(getData['Complete_Source'])});
+          ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source'])});
         }
 
-        console.log(getData['RepairCallTime']);
-
-        let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getData['RepairCallTime']);
+        let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
         let newData = {
           "ClientName": "..." ,
           "ClientAddress": "..." ,
@@ -438,7 +324,7 @@ export class HomePage {
         Data.push(newData);
       }
 
-      let newDate = this.convertApiTimeToDate(Data[0]['MissionTime']);
+      let newDate = UnitConverter.convertApiTimeToDate(Data[0]['MissionTime']);
       let newDayString = this.dayNameArray[newDate.getDay()];
       let newMonthString = this.monthNameArray[newDate.getMonth()];
       let DateString = newMonthString + " " + newDate.getDate();
@@ -483,7 +369,7 @@ export class HomePage {
     for (let i = 0 ; i < dataAddOn.length ; i++) {
       let getObject = dataAddOn[i];
 
-      let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getObject['Data']['RepairCallTime']);
+      let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getObject['Data']['RepairCallTime']);
       let newData = {
         "ClientName": "..." ,
         "ClientAddress": "..." ,
@@ -547,7 +433,7 @@ export class HomePage {
       for (let j = 0 ; j < getObject['Data'].length ; j++) {        
         let getData = getObject['Data'][j]['Data'];
         
-        let MissionTimeOnlyHour = this.getHourMinuteFromDateString(getData['RepairCallTime']);
+        let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
         let newData = {
           "ClientName": "..." ,
           "ClientAddress": "..." ,
@@ -568,7 +454,7 @@ export class HomePage {
         Data.push(newData);
       }
 
-      let newDate = this.convertApiTimeToDate(Data[0]['MissionTime']);
+      let newDate = UnitConverter.convertApiTimeToDate(Data[0]['MissionTime']);
       let newDayString = this.dayNameArray[newDate.getDay()];
       let newMonthString = this.monthNameArray[newDate.getMonth()];
       let DateString = newMonthString + " " + newDate.getDate();
@@ -743,7 +629,6 @@ export class HomePage {
 
     this.doneMissionList = data;
   }
-
   setDataNext () {
 
     // initialize
@@ -853,7 +738,6 @@ export class HomePage {
 
     this.futureMissionList = data;
   }
-
   setDataToday () {
     
     // initialize current date
@@ -893,10 +777,6 @@ export class HomePage {
     };
   }
 
-  /**
-   * 
-   * @param device_id 
-   */
   getRawDataDoneMission (device_id: string) {
     
     // generate raw dummy data
@@ -998,11 +878,6 @@ export class HomePage {
 
     return rawData;
   }
-
-  /**
-   * 
-   * @param device_id 
-   */
   getRawDataTodayMission (device_id: string) {
     
     // generate raw dummy data
@@ -1075,11 +950,6 @@ export class HomePage {
 
     return rawData;
   }
-
-  /**
-   * 
-   * @param device_id 
-   */
   getRawDataFutureMission (device_id: string) {
     
     // generate raw dummy data
