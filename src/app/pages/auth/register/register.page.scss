@@ -22,7 +22,8 @@
 .header {
     text-align: center;
     font-weight: bold;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
+    margin-top: 8px;
 }
 
 .img-header {
@@ -42,7 +43,8 @@
     border-color: #259ed6;
     border-radius: 10px;
     box-shadow: 0px 0px 15px 2px #aad3e6;
-    margin: 50px 25px;
+    margin-left: 25px;
+    margin-right: 25px;
     padding: 5px;
 }
 
@@ -81,4 +83,10 @@ h6 {
 .center {
     margin-left: auto;
     margin-right: auto;
+}
+
+.title {
+    text-align: center; 
+    margin-bottom: 24px; 
+    border-bottom: solid #00000055 1px
 }
