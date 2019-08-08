@@ -30,9 +30,8 @@ export class LoginPage implements OnInit {
     let resultData: any;
     resultData = await this.api.loginRepairmanUsingEmail(credential, password);
 
-    if (resultData === 0) {
+    if (resultData === 0 || resultData === -1)
       resultData = await this.api.loginRepairmanUsingEmployeeId(credential, password);
-    }
 
     console.log(resultData);
   }
