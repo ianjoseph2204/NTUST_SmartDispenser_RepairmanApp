@@ -60,11 +60,22 @@ h6 {
     margin: 30px 15px;
 }
 
-.uploadPhoto {
-    display: block;
-    opacity: 0.5;
+.image-upload {
     margin: 5px;
+}
+
+.image-upload>input {
+    display: none;
+}
+
+.image-upload--uploadPhoto {
+    display: block;
     max-height: 100px;
+    border-radius: 50%;
+}
+
+.before {
+    opacity: 0.5;
 }
 
 .center {

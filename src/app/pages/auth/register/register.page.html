@@ -18,9 +18,28 @@
 
   <div class="section">
     <div class="section-inside">
+
+      <ion-item lines="none">
+        <div class="image-upload center">
+          <h6>Profile Picture</h6>
+          <label for="file-input">
+            <!-- Icon by https://www.flaticon.com/authors/iconnice -->
+            <img
+              *ngIf="!alreadyUpload"
+              src="/assets/upload-image/profile-empty.png"
+              class="image-upload--uploadPhoto before" />
+            <img 
+              *ngIf="alreadyUpload"
+              [src]="urlImage" 
+              class="image-upload--uploadPhoto">
+          </label>
+          <input id="file-input" accept="image/*" type="file" (change)="onFileSelect($event)" />
+        </div>
+      </ion-item>
+
       <ion-item>
         <ion-label position="floating">Full Name</ion-label>
-        <ion-input type="text" [(ngModel)]="fullname"></ion-input>
+        <ion-input required type="text" [(ngModel)]="fullname"></ion-input>
       </ion-item>
   
       <ion-item>
@@ -42,25 +61,18 @@
   
       <ion-item>
         <ion-label position="floating">Re-enter Password</ion-label>
-        <ion-input type="password" [(ngModel)]="re_password" (change)=checkSamePassword(re_password)></ion-input>
-        <p *ngIf="passwordFalse" class="falseInput">Password not match!</p>
-      </ion-item>
-
-      <ion-item>
-        <div class="center">
-          <h6>Your picture</h6><br>
-          <img src="/assets/upload-image/upload.png" class="uploadPhoto" />
-        </div>
+        <ion-input type="password" [(ngModel)]="re_password"></ion-input>
       </ion-item>
   
       <h6 class="confirm-text">
         By clicking <b>Sign Up</b>, you agree to our Terms, Data Policy and Cookie Policy.
-        You will receieve verification email in your mailbox after the company verified your account.
+        Your account will be verified by your company and receive notification to your email.
       </h6>
   
       <div class="btn-yes">
         <ion-button class="i-btn-yes" size="small" fill="solid" expand="block" (click)="signUp()">Sign up</ion-button>
       </div>
+
     </div>
   </div>
 
