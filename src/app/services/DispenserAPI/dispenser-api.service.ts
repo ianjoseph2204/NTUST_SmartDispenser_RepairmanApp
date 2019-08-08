@@ -12,10 +12,12 @@ export class DispenserAPIService {
   
   // constant url List
   /* 01 */ private urlGetToken: string = this.domain + 'Login';
-  /* 02 */ private urlCreateUser: string = this.domain + 'CreateUser';
-  /* 03 */ private urlUserLogin: string = this.domain + 'UserLogin';
+  /* 02 */ private urlCreateRepairman: string = this.domain + 'CreateRepairman';
+  /* 03 */ private urlLoginRepairman: string = this.domain + 'RepairmanLogin';
   /* 04 */ private urlDispenserDetail: string = this.domain + 'Dispenser/Detail?Device_ID=';
   /* 05 */ private urlGetDispenserRepairCondition: string = this.domain + 'Dispenser/Repair?Device_ID=';
+  /* 06 */ private urlForgotPassword: string = this.domain + 'RepairmanForget';
+  /* 07 */ private urlResetPassowrd: string = this.domain + 'Repairman/PasswordReset';
 
   // function list
   /*
@@ -83,7 +85,7 @@ export class DispenserAPIService {
    *    "Message": "Registration success!"
    * }
    */
-  async registerNewUser (
+  async registerRepairman (
     fullname: string, 
     email: string, 
     password: string, 
@@ -92,7 +94,7 @@ export class DispenserAPIService {
     photo: any
   ) {
     
-    let url = this.urlCreateUser;
+    let url = this.urlCreateRepairman;
     let token: string = "";
     let returnValue = {
       "RepsondNum": -1,
@@ -102,16 +104,11 @@ export class DispenserAPIService {
     try {
       token = await this.getToken();
     } catch (e) {
-      console.error("Function error: on registerNewUser while getToken => " + e);
+      console.error("Function error: on registerRepairman while getToken => " + e);
       returnValue = {
         "RepsondNum": -1,
         "Message": "There is an error from server, please try again later!"
       };
-    }
-
-    const postDataRegister = {
-      "Email" : email,
-      "Password" : password
     }
       
     if (password !== repassword) {
@@ -120,6 +117,15 @@ export class DispenserAPIService {
         "Message": "Password not match!"
       };
     } else {
+
+      const postDataRegister = {
+        "Email": email,
+        "FullName": fullname,
+        "EmployeeID": employee_id,
+        "Password": password,
+        "Picture": photo
+      }      
+
       let httpOption = await {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
@@ -154,7 +160,7 @@ export class DispenserAPIService {
         };
       })
       .catch((e) => {
-        console.error("Function error: on registerNewUser => " + e);
+        console.error("Function error: on registerRepairman => " + e);
         
         returnValue = {
           "RepsondNum": -1,
@@ -165,7 +171,7 @@ export class DispenserAPIService {
 
     return returnValue; 
   }
-  
+
   /**
    * This function is for login the user with email and password.
    * Before do login, the email should be verified after register,
@@ -177,9 +183,9 @@ export class DispenserAPIService {
    * 
    * @returns   number    Return 1 if success, 0 if not match, -1 if failed/error
    */
-  async loginUser (email: string, password: string) {
+  async loginRepairmanUsingEmail (email: string, password: string) {
     
-    let url = this.urlUserLogin;
+    let url = this.urlLoginRepairman;
 
     const postBody = {
       "Email": email,
@@ -199,9 +205,169 @@ export class DispenserAPIService {
         return 0;
       })
       .catch((e) => {
-        console.error("Function error: on loginUser => " + e);
+        console.error("Function error: on loginRepairmanUsingEmail => " + e);
         return -1;
       });
+  }
+
+  /**
+   * This function is for login the user with email and password.
+   * Before do login, the email should be verified after register,
+   * the server will send the verification email to user email
+   * address.
+   * 
+   * @param     email     Email address of the user
+   * @param     password  Password of the user
+   * 
+   * @returns   number    Return 1 if success, 0 if not match, -1 if failed/error
+   */
+  async loginRepairmanUsingEmployeeId (employee_id: string, password: string) {
+    
+    let url = this.urlLoginRepairman;
+
+    const postBody = {
+      "EmployeeID": employee_id,
+      "Password": password
+    };
+
+    return await this.http.post(url, postBody).toPromise()
+      .then((result) => {
+        if (result['code'] === 200) {
+          return 1;
+        } else {
+          console.error("Error while log in: " + result['msg']);
+          return 0;
+        }
+      }, () => {
+        console.error("Promise rejected: unable to login!");
+        return 0;
+      })
+      .catch((e) => {
+        console.error("Function error: on loginRepairmanUsingEmployeeId => " + e);
+        return -1;
+      });
+  }
+
+  async forgotPasswordUsingEmail (email: string) {
+
+    let url = this.urlForgotPassword;
+
+    const postBody = {
+      "Email": email
+    };
+
+    return await this.http.post(url, postBody).toPromise()
+      .then((result) => {
+        if (result['code'] === 200) {
+          return 1;
+        } else {
+          console.error("Error while send reset password request: " + result['msg']);
+          return 0;
+        }
+      }, () => {
+        console.error("Promise rejected: unable to send reset password request!");
+        return 0;
+      })
+      .catch((e) => {
+        console.error("Function error: on forgotPasswordUsingEmail => " + e);
+        return -1;
+      });
+  }
+
+  async forgotPasswordUsingEmployeeId (employee_id: string) {
+
+    let url = this.urlForgotPassword;
+
+    const postBody = {
+      "EmployeeID": employee_id
+    };
+
+    return await this.http.post(url, postBody).toPromise()
+      .then((result) => {
+        if (result['code'] === 200) {
+          return 1;
+        } else {
+          console.error("Error while send reset password request: " + result['msg']);
+          return 0;
+        }
+      }, () => {
+        console.error("Promise rejected: unable to send reset password request!");
+        return 0;
+      })
+      .catch((e) => {
+        console.error("Function error: on forgotPasswordUsingEmployeeId => " + e);
+        return -1;
+      });
+  }
+
+  async resetPasswordUsingEmail (email: string, newPassword: string, reNewPassword: string, verifCode: string) {
+
+    let url = this.urlResetPassowrd;
+
+    if (newPassword !== reNewPassword) {
+      
+      console.error("Password not match!");
+      return 0;
+    } else {
+
+      const postBody = {
+        "Email": email,
+        "Password": newPassword,
+        "VerificationCode": verifCode
+      };
+
+      return await this.http.post(url, postBody).toPromise()
+        .then((result) => {
+          if (result['code'] === 200) {
+            return 1;
+          } else {
+            console.error("Error while reset password: " + result['msg']);
+            return -1;
+          }
+        }, () => {
+          console.error("Promise rejected: unable to reset password!");
+          return -1;
+        })
+        .catch((e) => {
+          console.error("Function error: on resetPasswordUsingEmail => " + e);
+          return -1;
+        });
+    }
+  }
+
+  async resetPasswordUsingEmployeeId (employee_id: string, newPassword: string, reNewPassword: string, verifCode: string) {
+
+    let url = this.urlResetPassowrd;
+
+    if (newPassword !== reNewPassword) {
+      
+      console.error("Password not match!");
+      return 0;
+    } else {
+
+      const postBody = {
+        "EmployeeID": employee_id,
+        "Password": newPassword,
+        "VerificationCode": verifCode
+      };
+
+      return await this.http.post(url, postBody).toPromise()
+        .then((result) => {
+          if (result['code'] === 200) {
+            return 1;
+          } else {
+            console.error("Error while reset password: " + result['msg']);
+            return -1;
+          }
+        }, () => {
+          console.error("Promise rejected: unable to reset password!");
+          return -1;
+        })
+        .catch((e) => {
+          console.error("Function error: on resetPasswordUsingEmployeeId => " + e);
+          return -1;
+        });
+    }
   }
 
   /**

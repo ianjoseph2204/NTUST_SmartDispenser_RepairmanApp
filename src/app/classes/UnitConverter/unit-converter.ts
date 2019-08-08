@@ -193,4 +193,18 @@ export class UnitConverter {
 
     return buildApiTimeFormat;
   }
+
+  // public static encryptUsingSha256 (plain_text: string) {
+
+  //   let SHA256 = CryptoJS;
+  //   let encryptedText = SHA256(plain_text).toString();
+  //   return encryptedText;
+  // }
+
+  // public static encryptUsingSha512 (plain_text: string) {
+
+  //   let SHA256 = require("crypto-js/sha512");
+  //   let encryptedText = SHA256(plain_text).toString();
+  //   return encryptedText;
+  // }
 }
