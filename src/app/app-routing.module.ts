@@ -8,7 +8,8 @@ const routes: Routes = [
   { path: 'modal-page', loadChildren: './pages/modal-page/modal-page.module#ModalPagePageModule' },
   { path: 'detail', loadChildren: './pages/detail/detail.module#DetailPageModule' },
   { path: 'login', loadChildren: './pages/auth/login/login.module#LoginPageModule' },
-  { path: 'register', loadChildren: './pages/auth/register/register.module#RegisterPageModule' },
+  { path: 'register', loadChildren: './pages/auth/register/register.module#RegisterPageModule' },  { path: 'report-repair', loadChildren: './pages/report-repair/report-repair.module#ReportRepairPageModule' },
+
 
 ];
 
