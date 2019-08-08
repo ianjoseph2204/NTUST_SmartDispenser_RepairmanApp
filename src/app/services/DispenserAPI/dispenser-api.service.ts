@@ -303,6 +303,21 @@ export class DispenserAPIService {
   async resetPasswordUsingEmail (email: string, newPassword: string, reNewPassword: string, verifCode: string) {
 
     let url = this.urlResetPassowrd;
+    let token: string = "";
+    let returnValue = {
+      "RepsondNum": -1,
+      "Message": "Null message."
+    }
+
+    try {
+      token = await this.getToken();
+    } catch (e) {
+      console.error("Function error: on resetPasswordUsingEmail while getToken => " + e);
+      returnValue = {
+        "RepsondNum": -1,
+        "Message": "There is an error from server, please try again later!"
+      };
+    }
 
     if (newPassword !== reNewPassword) {
       
@@ -316,7 +331,14 @@ export class DispenserAPIService {
         "VerificationCode": verifCode
       };
 
-      return await this.http.post(url, postBody).toPromise()
+      let httpOption = await {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': token
+        })
+      };
+
+      return await this.http.post(url, postBody, httpOption).toPromise()
         .then((result) => {
           if (result['code'] === 200) {
             return 1;
@@ -338,6 +360,21 @@ export class DispenserAPIService {
   async resetPasswordUsingEmployeeId (employee_id: string, newPassword: string, reNewPassword: string, verifCode: string) {
 
     let url = this.urlResetPassowrd;
+    let token: string = "";
+    let returnValue = {
+      "RepsondNum": -1,
+      "Message": "Null message."
+    }
+
+    try {
+      token = await this.getToken();
+    } catch (e) {
+      console.error("Function error: on resetPasswordUsingEmployeeId while getToken => " + e);
+      returnValue = {
+        "RepsondNum": -1,
+        "Message": "There is an error from server, please try again later!"
+      };
+    }
 
     if (newPassword !== reNewPassword) {
       
@@ -351,7 +388,14 @@ export class DispenserAPIService {
         "VerificationCode": verifCode
       };
 
-      return await this.http.post(url, postBody).toPromise()
+      let httpOption = await {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': token
+        })
+      };
+
+      return await this.http.post(url, postBody, httpOption).toPromise()
         .then((result) => {
           if (result['code'] === 200) {
             return 1;
