@@ -117,7 +117,7 @@
         </ion-col>
         <ion-col size="6">
           <div>
-            <ion-button *ngIf="!inputCamera" expand="full" (click)="compleRepair()">Comple Repair</ion-button>
+            <ion-button *ngIf="!inputCamera" expand="full" (click)="completeRepair()">Comple Repair</ion-button>
             <ion-button *ngIf="inputCamera" expand="full" (click)="imageInput.click()">Comple Repair</ion-button>
             <input type="file" id="file-input" accept="image/*;capture=camera" style="display: none;"
               (change)="uploadImage($event)" multiple #imageInput>
