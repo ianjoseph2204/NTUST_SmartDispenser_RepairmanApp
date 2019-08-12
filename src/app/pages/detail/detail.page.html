@@ -37,14 +37,14 @@
     <ion-item lines="none">
       <ion-label>
         <p class="item--title">MACHINE TYPE</p>
-        <span class="item--detail">{{data.MachineType}}</span>
+        <span class="item--detail">{{data.DeviceType}}</span>
       </ion-label>
     </ion-item>
     
     <ion-item lines="none">
       <ion-label>
         <p class="item--title">MACHINE NUMBER</p>
-        <span class="item--detail">{{data.MachineNumber}}</span>
+        <span class="item--detail">{{data.DeviceNumber}}</span>
       </ion-label>
     </ion-item>
 
@@ -58,7 +58,7 @@
     <ion-item lines="none">
       <ion-label>
         <p class="item--title">PROBLEM</p>
-        <span class="item--detail">{{data.ProblemOccured}}</span>
+        <span class="item--detail">{{data.ProblemDescription}}</span>
       </ion-label>
     </ion-item>
 
@@ -117,7 +117,7 @@
         </ion-col>
         <ion-col size="6">
           <div>
-            <ion-button *ngIf="!inputCamera" expand="full" (click)="compleRepair()">Comple Repair</ion-button>
+            <ion-button *ngIf="!inputCamera" expand="full" (click)="completeRepair()">Comple Repair</ion-button>
             <ion-button *ngIf="inputCamera" expand="full" (click)="imageInput.click()">Comple Repair</ion-button>
             <input type="file" id="file-input" accept="image/*;capture=camera" style="display: none;"
               (change)="uploadImage($event)" multiple #imageInput>
