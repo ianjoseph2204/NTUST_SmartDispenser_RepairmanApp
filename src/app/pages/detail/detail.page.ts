@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import {ModalController, NavController, NavParams} from '@ionic/angular';
 
 @Component({
   selector: 'app-detail',
@@ -13,18 +13,18 @@ export class DetailPage implements OnInit {
   Arrived = false;
   inputCamera = false;
 
-
   constructor(
-    public modalController: ModalController, 
-    public navParams: NavParams
+      public modalController: ModalController,
+      public navParams: NavParams,
+      public navCtrl: NavController
   ) {
     this.data = navParams.get('Data');
     this.doneMission = navParams.get('DoneMission');
   }
 
   ngOnInit() {
-   console.log(this.data);
-   console.log(this.doneMission);
+    console.log(this.data);
+    console.log(this.doneMission);
   }
 
   dismiss() {
@@ -45,7 +45,7 @@ export class DetailPage implements OnInit {
   }
 
   image: any = [];
-  reader: any = []
+  reader: any = [];
   uploadImage(event) { // called each time file input changes
 
     console.log(event.target.files.FileList);
