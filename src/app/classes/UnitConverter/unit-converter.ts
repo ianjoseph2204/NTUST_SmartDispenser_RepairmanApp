@@ -62,7 +62,7 @@ export class UnitConverter {
     ////////////////////////////////////////////
 
     // now we get every component to construct date into JSON format
-    let newDate = {
+    return {
       'Year': resultYear,
       'Month': resultMonth,
       'DateOfMonth': resultDateOfMonth,
@@ -70,8 +70,6 @@ export class UnitConverter {
       'Minute': resultMinute,
       'Second': resultSecond
     };
-
-    return newDate;
   }
 
   /**
@@ -125,17 +123,15 @@ export class UnitConverter {
     ////////////////////////////////////////////
 
     // now we get every component to construct date from String
-    let newDate = new Date(
-      resultYear,
-      resultMonth,
-      resultDateOfMonth,
-      resultHourC,
-      resultMinute,
-      resultSecond,
-      0
+    return new Date(
+        resultYear,
+        resultMonth,
+        resultDateOfMonth,
+        resultHourC,
+        resultMinute,
+        resultSecond,
+        0
     );
-
-    return newDate;
   }
 
   /**
@@ -155,13 +151,12 @@ export class UnitConverter {
    * @param dateString 
    */
   public static convertDateStringToHourMinuteOnly (dateString: string) {
+
     let dateStringSplit = dateString.split(" ");
     let getHour = dateStringSplit[1];
 
     let hourSplit = getHour.split(":");
-    let hourMinute = hourSplit[0] + ":" + hourSplit[1];
-
-    return hourMinute;
+    return hourSplit[0] + ":" + hourSplit[1];
   }
 
   /**
@@ -189,9 +184,7 @@ export class UnitConverter {
     let minute = date.getMinutes();
     let second = date.getSeconds();
 
-    let buildApiTimeFormat = year + "-" + month + "-" + dateOfMonth + " " + hour + ":" + minute + ":" + second;
-
-    return buildApiTimeFormat;
+    return year + "-" + month + "-" + dateOfMonth + " " + hour + ":" + minute + ":" + second;
   }
 
   // public static encryptUsingSha256 (plain_text: string) {
