@@ -26,6 +26,7 @@
               </ion-item>
   
               <ion-card class="card-done" *ngFor="let missionItem of missionDay.Data" (click)="openDetail(missionItem.MissionNumber, true)" tappable>
+
                 <ion-item lines="none">
                   <ion-label class="card--title">
                     <span>{{missionItem.ClientName}}</span>
@@ -34,11 +35,13 @@
                     <span>{{missionItem.MissionTimeOnlyHour}}</span>
                   </ion-label>
                 </ion-item>
+
                 <ion-item lines="none" class="address--done">
                   <ion-label class="card--address card--address--only-done">
                     <span>{{missionItem.ClientAddress}}</span>
                   </ion-label>
                 </ion-item>
+
                 <div class="card--done">
                   <img
                     *ngFor="let images of missionItem.ReportImages; let i=index"
@@ -46,6 +49,7 @@
                     alt="image-{{i+1}}"
                     class="card--done--image-report" />
                 </div>
+
               </ion-card>
   
             </ion-list>
@@ -77,6 +81,7 @@
     
               <div>
                 <ion-card class="card-today" *ngFor="let item of todayMissionList.Data" (click)="openDetail(item.MissionNumber, false)" tappable>
+
                   <ion-item lines="none">
                     <ion-label class="card--title">
                       <span>{{item.ClientName}}</span>
@@ -85,11 +90,13 @@
                       <span>{{item.MissionTimeOnlyHour}}</span>
                     </ion-label>
                   </ion-item>
+
                   <ion-item lines="none">
                     <ion-label class="card--address">
                       <span>{{item.ClientAddress}}</span>
                     </ion-label>
                   </ion-item>
+
                 </ion-card>
               </div>
     
@@ -119,19 +126,23 @@
               </ion-item>
 
               <ion-card class="card-future" *ngFor="let missionItem of missionDay.Data">
+
                 <ion-item lines="none">
                   <ion-label class="card--title">
                     <span>{{missionItem.ClientName}}</span>
                   </ion-label>
+
                   <ion-label class="card--title-time">
                     <span>{{missionItem.MissionTimeOnlyHour}}</span>
                   </ion-label>
                 </ion-item>
+
                 <ion-item lines="none">
                   <ion-label class="card--address">
                     <span>{{missionItem.ClientAddress}}</span>
                   </ion-label>
                 </ion-item>
+
               </ion-card>
 
             </ion-list>
