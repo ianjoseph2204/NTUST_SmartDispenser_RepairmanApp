@@ -1,9 +1,56 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>report-repair</ion-title>
+      <div class="header">
+        <span class="back-button" (click)="backButton()">
+          <ion-icon class="arrow-back" ion-text-left="10px" name="ios-arrow-back"></ion-icon>
+          <span class="report-repairing-progress">Report repairing progress</span>
+        </span>
+      </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-card>
 
+    <div class="report-detail">
+      <span class="detail-logo">
+        <ion-icon color="primary" name="pin"></ion-icon>
+      </span>
+      <span class="detail-property">Location   : </span>
+      <span class="detail-information">{{device_building_position}}, {{device_placement_position}}</span>
+    </div>
+
+    <div class="report-detail">
+      <span class="detail-logo">
+        <ion-icon color="primary" name="pricetag"></ion-icon>
+      </span>
+      <span class="detail-property">Device ID  : </span>
+      <span class="detail-information">{{device_id}}</span>
+    </div>
+
+    <div class="report-detail">
+      <span class="detail-logo">
+        <ion-icon color="primary" name="pricetag"></ion-icon>
+      </span>
+      <span class="detail-property">Device Type: </span>
+      <span class="detail-information">{{device_type}}</span>
+    </div>
+
+    <div class="report-detail">
+      <span class="detail-logo">
+        <ion-icon color="primary" name="person"></ion-icon>
+      </span>
+      <span class="detail-property">Repairman  : </span>
+      <span class="detail-information">{{employee_name}}</span>
+    </div>
+
+    <div class="report-detail">
+      <span class="detail-logo">
+        <ion-icon color="primary" name="warning"></ion-icon>
+      </span>
+      <span class="detail-property">Problem    : </span>
+      <span class="detail-information">{{problem_description}}</span>
+    </div>
+
+  </ion-card>
 </ion-content>

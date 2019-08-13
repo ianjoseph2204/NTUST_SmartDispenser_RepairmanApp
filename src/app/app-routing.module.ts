@@ -6,7 +6,6 @@ const routes: Routes = [
   { path: 'home', loadChildren: './pages/home/home.module#HomePageModule' },
   { path: 'detail', loadChildren: './pages/detail/detail.module#DetailPageModule' },
   { path: 'login', loadChildren: './pages/auth/login/login.module#LoginPageModule' },
-  { path: 'modal', loadChildren: './pages/modal/modal.module#ModalPageModule' },
   { path: 'register', loadChildren: './pages/auth/register/register.module#RegisterPageModule' },
   { path: 'forgot-password', loadChildren: './pages/auth/forgot-password/forgot-password.module#ForgotPasswordPageModule' },
   { path: 'reset-password', loadChildren: './pages/auth/reset-password/reset-password.module#ResetPasswordPageModule' },
