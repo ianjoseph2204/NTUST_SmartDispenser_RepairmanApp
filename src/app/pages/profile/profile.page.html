@@ -1,0 +1,35 @@
+<ion-content>
+
+  <!-- cancel button -->
+  <div class="button--cancel" (click)="backFunc()">
+    <ion-icon slot="start" name="close" size="large" color="black"></ion-icon>
+  </div>
+
+  <!-- profile picture -->
+  <div class="user--profile-picture">
+    <img src="assets\upload-image\profile-empty.png" alt="profile-image" />
+  </div>
+
+  <!-- name -->
+  <div class="user--full-name">
+    Your Name
+  </div>
+
+  <!-- email -->
+  <div class="user--email-address">
+    <i>person01@example.com</i>
+  </div>
+
+  <!-- employee id -->
+  <div class="user--id">
+    <i>098761</i>
+  </div>
+
+  <!-- log out button -->
+  <div class="button--log-out">
+    <ion-button (click)="logout()" color="danger" fill="solid" expand="block" >
+      LOG OUT
+    </ion-button>
+  </div>
+
+</ion-content>
