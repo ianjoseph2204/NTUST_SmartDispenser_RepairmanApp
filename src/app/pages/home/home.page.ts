@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {IonSlides, ModalController} from '@ionic/angular';
+import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {DetailPage} from '../detail/detail.page';
 import {DispenserAPIService} from 'src/app/services/DispenserAPI/dispenser-api.service';
 import {PreferenceManagerService} from 'src/app/services/PreferenceManager/preference-manager.service';
@@ -36,6 +36,7 @@ export class HomePage {
   fragmentTitleArray = ["What I've Done", "Today's Mission", "Future"];
 
   constructor(
+      private navCtrl: NavController,
       public modalController: ModalController,
       private api: DispenserAPIService,
       private pref: PreferenceManagerService
@@ -76,6 +77,10 @@ export class HomePage {
     }
 
     this.loadReady = true;
+  }
+
+  profile() {
+    this.navCtrl.navigateForward(['profile']);
   }
 
   /**

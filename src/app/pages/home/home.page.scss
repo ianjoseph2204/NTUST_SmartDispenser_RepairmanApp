@@ -9,6 +9,10 @@ ion-header {
     padding-bottom: 0px;
 }
 
+ion-avatar {
+    border-radius: 50%;
+}
+
 .header-md:after {
     width: 0%;
 }
