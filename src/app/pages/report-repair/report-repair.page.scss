@@ -23,29 +23,36 @@ ion-header{
     font-size: 17px;
 }
 
-.report-detail{
+.detail-logo, .detail-property, .detail-information, .detail-separator{
     position: relative;
-    width: 90%;
-    height: 50px;
-    margin-right: 10px;
-    top: 5px;
-}
-
-.detail-logo, .detail-property, .detail-information{
-    position: relative;
-    top: 10px;
-    left: 10px;
+    min-height: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    left: 0;
     font-size: 15px;
     float: left;
 }
 
+.detail-logo{
+    width: 7%;
+    padding-left: 10px;
+}
+
 .detail-property{
-    width: 95px;
+    width: 33%;
+    padding-left: 10px;
     font-weight: bold;
 }
 
 .detail-information{
-    width: 170px;
+    width: 58%;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: justify;
+}
+
+.detail-separator{
+    width: 2%
 }
 
 $colors: (
