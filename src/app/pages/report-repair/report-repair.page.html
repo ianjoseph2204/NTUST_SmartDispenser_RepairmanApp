@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar>
     <div class="header">
-      <span class="back-button">
-        <ion-icon class="arrow-back" (click)="backButton()" ion-text-left="10px" size="large" name="ios-arrow-back"></ion-icon>
+      <span>
+        <ion-icon (click)="backButton()" style="zoom: 1.5;" name="ios-arrow-back"></ion-icon>
         <span class="report-repairing-progress">Report repairing progress</span>
       </span>
     </div>
@@ -50,7 +50,46 @@
   </ion-card>
 
   <!--Input repair description-->
-  <ion-textarea>
+  <ion-card>
+    <div class="description-text">Description</div>
 
-  </ion-textarea>
+    <div class="description-textarea">
+      <ion-textarea placeholder="Write down your progress on this repair..."></ion-textarea>
+    </div>
+
+    <div class="description-text">Upload photos</div>
+
+    <div class="image-container">
+      <span class="image-block">
+        <div class="image-upload-space">
+          <div class="camera-icon">
+            <ion-icon name="camera" size="large"></ion-icon>
+          </div>
+        </div>
+      </span>
+
+      <span class="image-block">
+        <div class="image-upload-space">
+          <div class="camera-icon">
+            <ion-icon name="camera" size="large"></ion-icon>
+          </div>
+        </div>
+      </span>
+
+      <span class="image-block">
+        <div class="image-upload-space">
+          <div class="camera-icon">
+            <ion-icon name="camera" size="large"></ion-icon>
+          </div>
+        </div>
+      </span>
+    </div>
+
+    <div style="margin: 0 10px 10px 10px">
+      <ion-button expand="block">SUBMIT</ion-button>
+    </div>
+  </ion-card>
+
+
+
 </ion-content>

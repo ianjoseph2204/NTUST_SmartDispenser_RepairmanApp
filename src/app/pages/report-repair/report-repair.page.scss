@@ -1,3 +1,7 @@
+//=======================
+// Header Part CSS
+//=======================
+
 ion-header{
     --ion-background-color: #4a90e2;
 }
@@ -16,11 +20,10 @@ ion-header{
 }
 
 .report-repairing-progress{
-    position: relative;
-    height: 100%;
-    top: 0;
-    left: 5px;
+    position: absolute;
     font-size: 17px;
+    font-weight: bold;
+    transform: translateY(15%);
 }
 
 .detail-logo, .detail-property, .detail-information, .detail-separator{
@@ -53,6 +56,64 @@ ion-header{
 
 .detail-separator{
     width: 2%
+}
+
+//=======================
+// Content Part CSS
+//=======================
+
+.description-textarea, .description-text{
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size:  15px;
+}
+
+.description-text{
+    font-weight: bold;
+}
+
+.description-textarea{
+    margin-right: 10px;
+}
+
+ion-textarea{
+    border-bottom: solid 1.5px lightgrey;
+}
+
+.image-container, .image-block, .image-upload-space{
+    position: relative;
+}
+
+.image-container{
+    height: 130px;
+    width: 100%;
+    display: table;
+    margin-top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.image-block{
+    width: 33.33%;
+    height: 100%;
+    float: left;
+}
+
+.image-upload-space {
+    height: 120px;
+    width: 90px;
+    border-radius: 2px;
+    border: dashed 1.5px #d9d9d9;
+    background-color: #fbfbfb;
+    margin: 0 auto;
+}
+
+.camera-icon{
+    position: relative;
+    height: 32px;
+    width: 32px;
+    margin: 50% auto;
 }
 
 $colors: (
