@@ -4,13 +4,7 @@
 
 ion-header{
     --ion-background-color: #4a90e2;
-}
-
-.back-button{
-    position: relative;
-    width: 250px;
-    height: 22px;
-    left: 10px;
+    min-width: 350px;
 }
 
 .header{
@@ -19,11 +13,28 @@ ion-header{
     height: 100%;
 }
 
-.report-repairing-progress{
+.back-button, .report-repairing-text, .submit-button{
+    bottom: 50%;
+    margin-bottom: -8.5px;
+}
+
+.back-button{
+    position: relative;
+    width: 20px;
+    height: 20px;
+    left: 10px
+}
+
+.report-repairing-text{
     position: absolute;
     font-size: 17px;
-    font-weight: bold;
-    transform: translateY(15%);
+    left: 40px;
+}
+
+.submit-button{
+    position: absolute;
+    font-size: 16px;
+    right: 15px;
 }
 
 .detail-logo, .detail-property, .detail-information, .detail-separator{
@@ -62,6 +73,32 @@ ion-header{
 // Content Part CSS
 //=======================
 
+ion-content{
+    --ion-background-color: #f3f3f3;
+    min-width: 350px;
+}
+
+ion-card{
+    box-shadow: none !important;
+    --background: white;
+}
+
+.icon-space{
+    position: relative;
+    left: 50%;
+    margin-left: -30px;
+    height: 30px;
+    width: 100%;
+    z-index: 1;
+}
+
+.icon-jellyfish{
+    position: absolute;
+    height: 60px;
+    width: 60px;
+    bottom: -40px;
+}
+
 .description-textarea, .description-text{
     position: relative;
     margin-top: 10px;
@@ -86,12 +123,9 @@ ion-textarea{
 }
 
 .image-container{
-    height: 130px;
+    height: 150px;
     width: 100%;
     display: table;
-    margin-top: 10px;
-    padding-right: 10px;
-    padding-left: 10px;
 }
 
 .image-block{
@@ -100,13 +134,17 @@ ion-textarea{
     float: left;
 }
 
+div>input{
+    display: none;
+}
+
 .image-upload-space {
     height: 120px;
     width: 90px;
     border-radius: 2px;
     border: dashed 1.5px #d9d9d9;
     background-color: #fbfbfb;
-    margin: 0 auto;
+    margin: auto;
 }
 
 .camera-icon{
@@ -114,6 +152,19 @@ ion-textarea{
     height: 32px;
     width: 32px;
     margin: 50% auto;
+}
+
+.delete {
+    text-align: center;
+    color: red;
+    margin-bottom: 5px;
+    opacity: 0.5;
+}
+
+.imageUrl {
+    max-width:100%;
+    max-height:100%;
+    vertical-align: middle;
 }
 
 $colors: (
