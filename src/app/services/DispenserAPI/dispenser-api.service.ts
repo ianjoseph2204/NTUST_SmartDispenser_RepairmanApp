@@ -19,9 +19,10 @@ export class DispenserAPIService {
   /* 06 */ private urlForgotPassword: string = this.domain + 'RepairmanForget';
   /* 07 */ private urlResetPassowrd: string = this.domain + 'Repairman/PasswordReset';
   /* 08 */ private urlGetRepairmanTask: string = this.domain + 'Repairman/Task?Maintainer_ID=';
-  /* 09 */ private urlGetRepairmanProfile: string = this.domain + 'Repairman/Info?ID=';
-  /* 10 */ private urlRepairmanArrived: string = this.domain + 'Repairman/Arrived';
-  /* 11 */ private urlCompleteMission: string = this.domain + 'Repairman/TaskComplete';
+  /* 09 */ private urlGetRepairmanDoneTask: string = this.domain + 'Repairman/DoneTask?Maintainer_ID=';
+  /* 10 */ private urlGetRepairmanProfile: string = this.domain + 'Repairman/Info?ID=';
+  /* 11 */ private urlRepairmanArrived: string = this.domain + 'Repairman/Arrived';
+  /* 12 */ private urlCompleteMission: string = this.domain + 'Repairman/TaskComplete';
 
   constructor(private http: HttpClient) { }
 
@@ -290,6 +291,30 @@ export class DispenserAPIService {
     return returnValue;
   }
 
+  async getRepairmanProfile (credential: string) {
+
+    let url = this.urlGetRepairmanProfile + credential;
+
+    let returnValue = {
+      "FullName": "",
+      "Email": "",
+      "EmployeeID": "",
+      "Picture": "",
+    };
+
+    await this.http.get(url).toPromise()
+      .then((result) => {
+        returnValue = result['Data'];
+      }, () => {
+        console.error("Promise rejected: unable to get repairman profile!");
+      })
+      .catch((e) => {
+        console.error("Function error: on getRepairmanProfile => " + e);
+      });
+
+    return returnValue;
+  }
+
   /**
    * This function is to get details of the target dispenser from
    * the API. It returns the json format.
@@ -425,6 +450,118 @@ export class DispenserAPIService {
     return returnValue;
   }
 
+  /**
+   * Get missions which hasn't done, for missions with status 5 or
+   * has been done go to getRepairmanDoneMissions.
+   * 
+   * @param employee_id Repairman employee ID
+   * 
+   * @returns JSON array as list of repairman's missions
+   * 
+   * @example
+   * 
+   * [
+   *   {
+   *      "MissionNumber": 1565950709000000,
+   *      "Device_ID": "EE_08_01",
+   *      "Building":"Electrical and Computer Engineering Building 8F",
+   *      "Position":"Next to the elevator",
+   *      "ErrorType": 5,
+   *      "Description": "沒有飲水機電源",
+   *      "NotifyTime": "",
+   *      "RepairCallTime": "2019-12-13 09:00:00",
+   *      "Maintainer": "Bo-Yang",
+   *      "Maintainer_ID": "789456123",
+   *      "Index": 2,
+   *      "Source1":"",
+   *      "Source2":"",
+   *      "Source3":"",
+   *      "Name":"范淑燕",
+   *      "Tel":"02-2733-6160",
+   *      "Address":"106台北市大安區基隆路四段43號"
+   *  },
+   *
+   *  ...
+   * 
+   * ]
+   */
+  async getRepairmanMissions (employee_id: string) {
+
+    let url = this.urlGetRepairmanTask + employee_id;
+
+    let returnValue = [{}];
+
+    await this.http.get(url).toPromise()
+      .then((result) => {
+        returnValue = result['Data'];
+      }, () => {
+        console.error("Promise rejected: unable to get repairman missions!");
+      })
+      .catch((e) => {
+        console.error("Function error: on getRepairmanMissions => " + e);
+      });
+
+    return returnValue;
+  }
+  
+  /**
+   * Get missions which has been done, for missions with status 4 or
+   * lower means on going go to getRepairmanMissions.
+   * 
+   * @param employee_id Repairman employee ID
+   * 
+   * @returns JSON array as list of repairman's missions
+   * 
+   * @example
+   * 
+   * [
+   *   {
+   *     "MissionNumber":1565950709000000,
+   *     "Device_ID":"EE_08_01",
+   *     "Building":"Electrical and Computer Engineering Building 8F",
+   *     "Position":"Next to the elevator",
+   *     "ErrorType":5,
+   *     "Description":"luching不洗澡髒髒的",
+   *     "NotifyTime":"",
+   *     "RepairCallTime":"2019-12-13 09:00:00",
+   *     "Maintainer":"Bo-Yang",
+   *     "Maintainer_ID":"789456123",
+   *     "Index":0,
+   *     "Source":"",
+   *     "Source2":"",
+   *     "Source3":"",
+   *     "Name":"范淑燕",
+   *     "Tel":"02-2733-6160",
+   *     "Address":"106台北市大安區基隆路四段43號",
+   *     "ArriveTime":"2019-08-12 16:30:37",
+   *     "Complete_Index":3,
+   *     "Complete_Source":"",
+   *     "Complete_Source2":"",
+   *     "Complete_Source3":""
+   *   },
+   * 
+   *   ...
+   * ]
+   */
+  async getRepairmanDoneMissions (employee_id: string) {
+
+    let url = this.urlGetRepairmanDoneTask + employee_id;
+
+    let returnValue = [{}];
+
+    await this.http.get(url).toPromise()
+      .then((result) => {
+        returnValue = result['Data'];
+      }, () => {
+        console.error("Promise rejected: unable to get repairman done missions!");
+      })
+      .catch((e) => {
+        console.error("Function error: on getRepairmanDoneMissions => " + e);
+      });
+
+    return returnValue;
+  }
+
   async getAssignmentDone (device_id: string, employee_id: string) {
     
     // get data from RepairCondition
@@ -522,35 +659,57 @@ export class DispenserAPIService {
     return returnArray;
   }
 
-  async repairmanHasArrived (employee_id: string, assignment_num: string) {
+  async repairmanHasArrived (mission_num: number) {
 
-  }
+    let url = this.urlRepairmanArrived;
 
-  async repairmentReport (file: any, employee_id: string, assignment_num: string) {
-
-  }
-
-  async getRepairmanProfile (credential: string) {
-
-    let url = this.urlGetRepairmanProfile + credential;
-
-    let returnValue = {
-      "FullName": "",
-      "Email": "",
-      "EmployeeID": "",
-      "Picture": "",
+    const postBody = {
+      "MissionNumber": mission_num
     };
 
-    await this.http.get(url).toPromise()
-      .then((result) => {
-        returnValue = result['Data'];
+    return await this.http.post(url, postBody).toPromise()
+      .then((success) => {
+        return 1;
       }, () => {
-        console.error("Promise rejected: unable to get repairman profile!");
+        console.error("Promise rejected: unable to update repairman arrived status!");
+        return 0;
       })
       .catch((e) => {
-        console.error("Function error: on getRepairmanProfile => " + e);
+        console.error("Function error: on repairmanHasArrived => " + e);
+        return -1;
       });
+  }
 
-    return returnValue;
+  async repairmentCompleteReport (file: any, mission_num: number, description: string) {
+
+    let url = this.urlCompleteMission;
+
+    let formdataOnComplete = new FormData();
+    for (let i = 0; i < file.length; i++) {
+      formdataOnComplete.append('File', file[i]);
+    }
+    formdataOnComplete.append('MissionNumber', String(mission_num));
+    formdataOnComplete.append('Result', description);
+
+    return await this.http.post<any>(url, formdataOnComplete).toPromise()
+      .then((result) => {
+        if (result['code'] === 200) {
+          return true;
+        } else {
+          console.error("Error while sending report: " + result['msg']);
+          return false;
+        }
+      }, () => {
+        console.error("Promise rejected: unable to sending report!");
+        return false;
+      })
+      .catch((e) => {
+        console.error("Function error: on repairmentCompleteReport => " + e);
+        return false;
+      });
+  }
+
+  async repairmentNotCompleteReport (mission_num: number, description: string) {
+
   }
 }
