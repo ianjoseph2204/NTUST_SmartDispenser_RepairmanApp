@@ -29,6 +29,7 @@ export class HomePage {
   employee_id: string;
   loadReady: boolean = false;
   currentTime: string;
+  employee_picture_string = null;
 
   // constant array
   dayNameArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -51,28 +52,49 @@ export class HomePage {
 
     // dummy data
     this.device_id = "MA_03_01";
-    this.employee_id = "1";
 
-    let doneMissionRawData = await this.api.getAssignmentDone(this.device_id, this.employee_id);
-    if (doneMissionRawData.length !== 0) {
-      this.doneMissionList = await this.processDataDoneMission(doneMissionRawData);
+    // get id from preference
+    this.employee_id = await this.pref.getData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID);
+    if (this.employee_id !== null) {
+      
+      // set profile
+      await this.api.getRepairmanProfile(this.employee_id).then((getProfile) => {
+        this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
+      });
+
+      // set Done Mission
+      let doneMissionRawData = await this.api.getAssignmentDone(this.device_id, this.employee_id);
+      if (doneMissionRawData.length !== 0) {
+        this.doneMissionList = await this.processDataDoneMission(doneMissionRawData);
+      } else {
+        this.doneMissionList = null;
+      }    
+
+      // set Today Mission
+      let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);
+      if (todayMissionRawData.length !== 0) {
+        this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
+      } else {
+        this.todayMissionList = null;
+      }
+
+      // set Future Mission
+      let futureMissionRawData = await this.api.getAssignmentNext(this.device_id, this.employee_id, this.currentTime);
+      if (futureMissionRawData.length !== 0) {
+        this.futureMissionList = await this.processDataFutureMission(futureMissionRawData);
+      } else {
+        this.futureMissionList = null;
+      }
+
     } else {
+
+      // set profile to null
+      this.employee_id = null;
+      this.employee_picture_string = null;
+
+      // set all missions to null
       this.doneMissionList = null;
-    }
-
-    let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);
-
-    if (todayMissionRawData.length !== 0) {
-      this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
-    } else {
       this.todayMissionList = null;
-    }
-
-    let futureMissionRawData = await this.api.getAssignmentNext(this.device_id, this.employee_id, this.currentTime);
-
-    if (futureMissionRawData.length !== 0) {
-      this.futureMissionList = await this.processDataFutureMission(futureMissionRawData);
-    } else {
       this.futureMissionList = null;
     }
 

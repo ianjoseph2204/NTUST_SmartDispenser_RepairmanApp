@@ -4,7 +4,8 @@
     <ion-item class="ion-item--no-background title" lines="none">
       <ion-label>{{fragmentTitle}}</ion-label>
       <ion-avatar slot="end" (click)="profile()">
-        <img src="assets\upload-image\profile-empty.png">
+        <img *ngIf="employee_picture_string === null" src="assets\upload-image\profile-empty.png" alt="profile-image" />
+        <img *ngIf="employee_picture_string !== null" [src]="employee_picture_string" alt="profile-image" />
       </ion-avatar>
     </ion-item>
   </ion-header>
