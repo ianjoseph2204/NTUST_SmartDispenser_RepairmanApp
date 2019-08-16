@@ -1,6 +1,6 @@
 export class StaticVariables {
 
-    public static KEY__LOGIN_EMAIL = "login_email";
+    public static KEY__LOGIN_EMPLOYEE_EMAIL = "login_employee_email";
     public static KEY__LOGIN_EMPLOYEE_ID = "login_employee_id";
     public static KEY__EMPLOYEE_NAME = "employee_name";
 

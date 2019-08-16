@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api.service';
 
 @Component({
@@ -25,17 +25,49 @@ export class RegisterPage implements OnInit {
   emailFalse = false;
   passwordFalse = false;
 
+  // loadCtrl var
+  makeLoading: any;
+
   constructor(
-    private NavCtrl: NavController,
-    private AlertCtrl: AlertController,
-    private api: DispenserAPIService
+    private navCtrl: NavController,
+    private api: DispenserAPIService,
+    private toastCtrl: ToastController,
+    private loadCtrl: LoadingController,
+    private AlertCtrl: AlertController
   ) { }
 
-  ngOnInit() {
+  /**
+   * To going back, or route back, to the previous
+   * opened page.
+   */
+  backFunc() {
+    this.navCtrl.back();
   }
 
-  backFunc () {
-    this.NavCtrl.back();
+  /**
+   * Create the loading controller
+   */
+  async createLoadCtrl () {
+
+    // insert component of loading controller
+    this.makeLoading = await this.loadCtrl.create({
+      message: 'Loading data ...',
+      spinner: 'crescent',
+      duration: 10000
+    });
+
+    // display the loading controller
+    await this.makeLoading.present();
+  }
+
+  /**
+   * Dismiss the loading controller
+   */
+  async dismissLoadCtrl () {
+    this.makeLoading.dismiss();
+  }
+
+  ngOnInit() {
   }
 
   async onFileSelect(event: any) {
@@ -82,6 +114,7 @@ export class RegisterPage implements OnInit {
 
     // create variable to store alertCtrl
     let alert: any;
+    let respondNum: number;
     let alertHeader: string;
     let alertMessage: string;
 
@@ -95,10 +128,12 @@ export class RegisterPage implements OnInit {
       this.urlImage === null ||
       this.urlImage === undefined
     ) {
-
       alertHeader = "Form not complete";
       alertMessage = "Please fill all form input include upload profile picture!";
     } else {
+
+      // create loading screen
+      await this.createLoadCtrl();
 
       // remove "data:image/jpeg;base64," from url
       let splitUrlImage = this.urlImage.split("base64,");
@@ -114,14 +149,16 @@ export class RegisterPage implements OnInit {
         profile_picture
       );
 
-      if (register['RepsondNum'] === 1) {
-        alertHeader = "Registration complete"
-        alertMessage = "Thank you, your registration form has been submitted!";
-      } else {
-        alertHeader = "Registration failed"
-        alertMessage = register['Message'];
-      }
-      
+      respondNum = register['RepsondNum'];
+      alertMessage = register['Message'];
+    }
+
+    if (respondNum === 1) {
+      alertHeader = "Registration complete"
+      alertMessage = "Thank you, your registration form has been submitted!";
+      this.navCtrl.back();
+    } else {
+      alertHeader = "Registration failed"
     }
 
     // make alert object
@@ -139,6 +176,9 @@ export class RegisterPage implements OnInit {
     
     // display the alert
     alert.present();
+
+    // dismiss the loading screen
+    this.dismissLoadCtrl();
   }
 
   checkEmail (email) {

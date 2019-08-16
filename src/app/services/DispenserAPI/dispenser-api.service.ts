@@ -18,19 +18,10 @@ export class DispenserAPIService {
   /* 05 */ private urlGetDispenserRepairCondition: string = this.domain + 'Dispenser/Repair?Device_ID=';
   /* 06 */ private urlForgotPassword: string = this.domain + 'RepairmanForget';
   /* 07 */ private urlResetPassowrd: string = this.domain + 'Repairman/PasswordReset';
-
-  // function list
-  /*
-    async getToken ()
-    async registerNewUser (fullname: string, email: string, password: string, repassword: string, employee_id: string, photo: any)
-    async loginUser (email: string, password: string)
-    async getDispenserDetail (device_id: string)
-    async getDispenserRepairCondition (device_id: string)
-    async getAssignmentDone (device_id: string, employee_id: string)
-    async getAssignmentNext (device_id: string, employee_id: string)
-    async getAssignmentToday (device_id: string, employee_id: string, nowTime: string)
-    convertApiTimeToJson (time: string)
-  */
+  /* 08 */ private urlGetRepairmanTask: string = this.domain + 'Repairman/Task?Maintainer_ID=';
+  /* 09 */ private urlGetRepairmanProfile: string = this.domain + 'Repairman/Info?ID=';
+  /* 10 */ private urlRepairmanArrived: string = this.domain + 'Repairman/Arrived';
+  /* 11 */ private urlCompleteMission: string = this.domain + 'Repairman/TaskComplete';
 
   constructor(private http: HttpClient) { }
 
@@ -172,61 +163,13 @@ export class DispenserAPIService {
     return returnValue; 
   }
 
-  /**
-   * This function is for login the user with email and password.
-   * Before do login, the email should be verified after register,
-   * the server will send the verification email to user email
-   * address.
-   * 
-   * @param     email     Email address of the user
-   * @param     password  Password of the user
-   * 
-   * @returns   number    Return 1 if success, 0 if not match, -1 if failed/error
-   */
-  async loginRepairmanUsingEmail (email: string, password: string) {
+  async loginRepairman (credential: string, password: string) {
     
     let url = this.urlLoginRepairman;
 
     const postBody = {
-      "Email": email,
-      "Password": password
-    };
-
-    return await this.http.post(url, postBody).toPromise()
-      .then((result) => {
-        if (result['code'] === 200) {
-          return 1;
-        } else {
-          console.error("Error while log in: " + result['msg']);
-          return 0;
-        }
-      }, () => {
-        console.error("Promise rejected: unable to login!");
-        return 0;
-      })
-      .catch((e) => {
-        console.error("Function error: on loginRepairmanUsingEmail => " + e);
-        return -1;
-      });
-  }
-
-  /**
-   * This function is for login the user with email and password.
-   * Before do login, the email should be verified after register,
-   * the server will send the verification email to user email
-   * address.
-   * 
-   * @param     email     Email address of the user
-   * @param     password  Password of the user
-   * 
-   * @returns   number    Return 1 if success, 0 if not match, -1 if failed/error
-   */
-  async loginRepairmanUsingEmployeeId (employee_id: string, password: string) {
-    
-    let url = this.urlLoginRepairman;
-
-    const postBody = {
-      "EmployeeID": employee_id,
+      "Email": credential,
+      "EmployeeID": credential,
       "Password": password
     };
 
@@ -248,38 +191,13 @@ export class DispenserAPIService {
       });
   }
 
-  async forgotPasswordUsingEmail (email: string) {
-
+  async forgotPassword (credential: string) {
+    
     let url = this.urlForgotPassword;
 
     const postBody = {
-      "Email": email
-    };
-
-    return await this.http.post(url, postBody).toPromise()
-      .then((result) => {
-        if (result['code'] === 200) {
-          return 1;
-        } else {
-          console.error("Error while send reset password request: " + result['msg']);
-          return 0;
-        }
-      }, () => {
-        console.error("Promise rejected: unable to send reset password request!");
-        return 0;
-      })
-      .catch((e) => {
-        console.error("Function error: on forgotPasswordUsingEmail => " + e);
-        return -1;
-      });
-  }
-
-  async forgotPasswordUsingEmployeeId (employee_id: string) {
-
-    let url = this.urlForgotPassword;
-
-    const postBody = {
-      "EmployeeID": employee_id
+      "Email": credential,
+      "EmployeeID": credential
     };
 
     return await this.http.post(url, postBody).toPromise()
@@ -300,7 +218,7 @@ export class DispenserAPIService {
       });
   }
 
-  async resetPasswordUsingEmail (email: string, newPassword: string, reNewPassword: string, verifCode: string) {
+  async resetPassword (credential: string, newPassword: string, reNewPassword: string, verifCode: string) {
 
     let url = this.urlResetPassowrd;
     let token: string = "";
@@ -312,7 +230,7 @@ export class DispenserAPIService {
     try {
       token = await this.getToken();
     } catch (e) {
-      console.error("Function error: on resetPasswordUsingEmail while getToken => " + e);
+      console.error("Function error: on resetPassword while getToken => " + e);
       returnValue = {
         "RepsondNum": -1,
         "Message": "There is an error from server, please try again later!"
@@ -320,13 +238,15 @@ export class DispenserAPIService {
     }
 
     if (newPassword !== reNewPassword) {
-      
-      console.error("Password not match!");
-      return 0;
+      returnValue = {
+        "RepsondNum": 0,
+        "Message": "Password not match!"
+      };
     } else {
 
       const postBody = {
-        "Email": email,
+        "Email": credential,
+        "EmployeeID": credential,
         "Password": newPassword,
         "VerificationCode": verifCode
       };
@@ -338,80 +258,36 @@ export class DispenserAPIService {
         })
       };
 
-      return await this.http.post(url, postBody, httpOption).toPromise()
+      await this.http.post(url, postBody, httpOption).toPromise()
         .then((result) => {
           if (result['code'] === 200) {
-            return 1;
+            returnValue = {
+              "RepsondNum": 1,
+              "Message": "Your account password has successfully reset!"
+            };
           } else {
-            console.error("Error while reset password: " + result['msg']);
-            return -1;
+            returnValue = {
+              "RepsondNum": -1,
+              "Message": "There is an error from server, please try again later!"
+            };
           }
         }, () => {
           console.error("Promise rejected: unable to reset password!");
-          return -1;
+          returnValue = {
+            "RepsondNum": -1,
+            "Message": "The Email/Employee ID does not exist or Verification Code is not valid"
+          };
         })
         .catch((e) => {
-          console.error("Function error: on resetPasswordUsingEmail => " + e);
-          return -1;
+          console.error("Function error: on resetPassword => " + e);
+          returnValue = {
+            "RepsondNum": -1,
+            "Message": "There is an error from server, please try again later!"
+          };
         });
     }
-  }
 
-  async resetPasswordUsingEmployeeId (employee_id: string, newPassword: string, reNewPassword: string, verifCode: string) {
-
-    let url = this.urlResetPassowrd;
-    let token: string = "";
-    let returnValue = {
-      "RepsondNum": -1,
-      "Message": "Null message."
-    }
-
-    try {
-      token = await this.getToken();
-    } catch (e) {
-      console.error("Function error: on resetPasswordUsingEmployeeId while getToken => " + e);
-      returnValue = {
-        "RepsondNum": -1,
-        "Message": "There is an error from server, please try again later!"
-      };
-    }
-
-    if (newPassword !== reNewPassword) {
-      
-      console.error("Password not match!");
-      return 0;
-    } else {
-
-      const postBody = {
-        "EmployeeID": employee_id,
-        "Password": newPassword,
-        "VerificationCode": verifCode
-      };
-
-      let httpOption = await {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': token
-        })
-      };
-
-      return await this.http.post(url, postBody, httpOption).toPromise()
-        .then((result) => {
-          if (result['code'] === 200) {
-            return 1;
-          } else {
-            console.error("Error while reset password: " + result['msg']);
-            return -1;
-          }
-        }, () => {
-          console.error("Promise rejected: unable to reset password!");
-          return -1;
-        })
-        .catch((e) => {
-          console.error("Function error: on resetPasswordUsingEmployeeId => " + e);
-          return -1;
-        });
-    }
+    return returnValue;
   }
 
   /**
@@ -654,5 +530,27 @@ export class DispenserAPIService {
 
   }
 
-  
+  async getRepairmanProfile (credential: string) {
+
+    let url = this.urlGetRepairmanProfile + credential;
+
+    let returnValue = {
+      "FullName": "",
+      "Email": "",
+      "EmployeeID": "",
+      "Picture": "",
+    };
+
+    await this.http.get(url).toPromise()
+      .then((result) => {
+        returnValue = result['Data'];
+      }, () => {
+        console.error("Promise rejected: unable to get repairman profile!");
+      })
+      .catch((e) => {
+        console.error("Function error: on getRepairmanProfile => " + e);
+      });
+
+    return returnValue;
+  }
 }
