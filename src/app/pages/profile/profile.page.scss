@@ -20,6 +20,13 @@ ion-content {
     max-height: 125px;
     border-radius: 50%;
     margin: 30px auto;
+    display: table;
+}
+
+.user--profile-picture>img {
+    width: 125px;
+    height: auto;
+    border-radius: inherit;
 }
 
 .user--full-name {
