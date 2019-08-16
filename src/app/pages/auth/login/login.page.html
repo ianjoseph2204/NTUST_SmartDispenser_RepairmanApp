@@ -23,16 +23,19 @@
         <ion-label position="floating">Password</ion-label>
         <ion-input required type="password" [(ngModel)]="password"></ion-input>
       </ion-item>
+
+      <div (click)="recovery()" class="forgot-link">
+        <i>Forgot password?</i>
+      </div>
   
       <div class="btn-yes">
         <ion-button class="i-btn-yes" size="small" fill="solid" expand="block" (click)="login()">Login</ion-button>
       </div>
-  
+
       <div class="signup">
-        <h6>Don't have account yet? <br>
-          <span class="register" (click)="registerLink()">SIGN UP</span>
-        </h6>
+        <p>Not registered yet? <ion-text (click)="registerLink()" class="register">SIGN UP</ion-text></p>
       </div>
+      
     </div>
   </div>
   
