@@ -139,7 +139,11 @@ export class UnitConverter {
    * and return the string which can be display using
    * [src].
    * 
-   * @param base64 
+   * @param base64 String of base64 image without data types
+   * 
+   * @returns String of ready image to display with [img]="put-here-value"
+   * 
+   * @example "data:image/jpeg;base64, =/91dsadNJNDSJA .... SANDSKA/=="
    */
   public static convertBase64ToImage (base64: string) {
     let addOn = "data:image/jpeg;base64,";
@@ -147,8 +151,15 @@ export class UnitConverter {
   }
 
   /**
+   * Convert from date string, usually from API, in form
+   * YEAR-MONTH-DATE HOUR:MINUTE:SECOND into HOUR:MINUTE, it
+   * will return new string
    * 
-   * @param dateString 
+   * @param dateString Date in string format (YEAR-MONTH-DATE HOUR:MINUTE:SECOND)
+   * 
+   * @returns New time in string format (HOUR:MINUTE)
+   * 
+   * @example "23:59"
    */
   public static convertDateStringToHourMinuteOnly (dateString: string) {
 
@@ -160,8 +171,15 @@ export class UnitConverter {
   }
 
   /**
+   * Convert from Date class object into Date in string with API
+   * format (YEAR-MONTH-DATE HOUR:MINUTE:SECOND), it will return
+   * string.
    * 
-   * @param date 
+   * @param date Date object
+   * 
+   * @returns Date in string format (YEAR-MONTH-DATE HOUR:MINUTE:SECOND)
+   * 
+   * @example "2019-11-23 21:30:46"
    */
   public static convertDateToApiTimeFormat (date: Date) {
 
@@ -186,18 +204,4 @@ export class UnitConverter {
 
     return year + "-" + month + "-" + dateOfMonth + " " + hour + ":" + minute + ":" + second;
   }
-
-  // public static encryptUsingSha256 (plain_text: string) {
-
-  //   let SHA256 = CryptoJS;
-  //   let encryptedText = SHA256(plain_text).toString();
-  //   return encryptedText;
-  // }
-
-  // public static encryptUsingSha512 (plain_text: string) {
-
-  //   let SHA256 = require("crypto-js/sha512");
-  //   let encryptedText = SHA256(plain_text).toString();
-  //   return encryptedText;
-  // }
 }
