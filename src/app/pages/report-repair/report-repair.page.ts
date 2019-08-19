@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {PreferenceManagerService} from '../../services/PreferenceManager/preference-manager.service';
 import {StaticVariables} from '../../classes/StaticVariables/static-variables';
-import {NavController} from '@ionic/angular';
+import {AlertController, NavController} from '@ionic/angular';
 
 @Component({
   selector: 'app-report-repair',
@@ -16,8 +16,11 @@ export class ReportRepairPage implements OnInit {
   public device_building_position: string;
   public device_placement_position: string;
   public problem_description: string;
+  private urlImage: any = [null, null, null];
+  private fileImage: any = [null, null, null];
 
   constructor(
+      private alertCtrl: AlertController,
       private pref: PreferenceManagerService,
       private navCtrl: NavController) { }
 
@@ -36,5 +39,61 @@ export class ReportRepairPage implements OnInit {
 
   backButton(){
     this.navCtrl.back();
+  }
+
+  /**
+   * Method to add image
+   */
+  async onFileSelect(event: any, index: number) {
+
+    console.log(index);
+
+    // Limit size image to 10 Mb
+    if (event.target.files[0].size <= 10485760) {
+
+      // Check image length, image cannot empty
+      if (event.target.files.length > 0) {
+        this.fileImage[index] = event.target.files[0];
+
+        let reader = new FileReader();
+
+        // Read file as data url
+        reader.readAsDataURL(event.target.files[0]);
+
+        // Called once readAsDataURL is completed
+        reader.onload = (event) => {
+          this.urlImage[index] = reader.result;
+          // this.imageIndex++;
+        }
+      }
+
+    } else {
+
+      // Send message if data is to big
+      const tooBig = await this.alertCtrl.create({
+        mode: "ios",
+        header: 'File Size is to Big',
+        message: 'Please upload file below 10 Mb!',
+        buttons: [
+          {
+            text: 'OK',
+            handler: () => {
+              console.log('Confirm Cancel: Ok');
+            }
+          }
+        ]
+      });
+      await tooBig.present();
+    }
+  }
+
+  /**
+   * @param index is number image uploaded by user
+   * Method to rearrange array if user delete the image
+   */
+  async delete(index: number) {
+
+    this.fileImage[index] = null;
+    this.urlImage[index] = null;
   }
 }
