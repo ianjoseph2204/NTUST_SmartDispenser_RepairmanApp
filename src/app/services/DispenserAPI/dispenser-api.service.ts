@@ -59,24 +59,25 @@ export class DispenserAPIService {
   }
 
   /**
-   * This function is for registering new user using
-   * email and password. The password should be input
-   * again in the page to confirm password is same and
-   * no mistake.
-   *
-   * @param fullname
-   * @param     email       Email address of the user
-   * @param     password    Password of the user
-   * @param     repassword  Re type the password
-   *
-   * @param employee_id
-   * @param photo
-   * @returns   json        Return json object with respond number and message
-   *
+   * Register new repairman into API using the form of data.
+   * It will need fullname, email address, password and re password,
+   * employee ID, and profile picture. This function will return
+   * json object which contain respond number and the message
+   * to be displayed.
+   * 
+   * @param   fullname      Repairman's full name
+   * @param   email         Repairman's email address
+   * @param   password      Repairman account's password
+   * @param   repassword    Repairman account's password, to verify
+   * @param   employee_id   Repairman's employee ID
+   * @param   photo         Repairman's profile picture
+   * 
+   * @returns JSON          Json object which contains RespondNum and Message
+   * 
    * @example
    *
    * {
-   *    "RepsondNum": 1,
+   *    "RespondNum": 1,
    *    "Message": "Registration success!"
    * }
    */
@@ -167,6 +168,16 @@ export class DispenserAPIService {
     return returnValue; 
   }
 
+  /**
+   * Repairman can perform login using either his email address or
+   * his employee ID and his password. This function will return
+   * response number as success or failed.
+   * 
+   * @param   credential  Repairman's email address of employee ID
+   * @param   password    Repairman's account password
+   * 
+   * @returns number      Return 1 for success, 0 for failed, and -1 for error
+   */
   async loginRepairman (credential: string, password: string) {
     
     let url = this.urlLoginRepairman;
@@ -195,6 +206,17 @@ export class DispenserAPIService {
       });
   }
 
+  /**
+   * Forgot password function is to generate the verification code
+   * for reseting repairman account's password which will be sent
+   * into his mailbox. It can be using either email address or
+   * employee ID. This function will return repsonse number as 
+   * success or failed.
+   * 
+   * @param   credential  Repairman's email address or employee ID
+   * 
+   * @returns number      Return 1 for success, 0 for failed, and -1 for error
+   */
   async forgotPassword (credential: string) {
     
     let url = this.urlForgotPassword;
@@ -222,6 +244,27 @@ export class DispenserAPIService {
       });
   }
 
+  /**
+   * Continuing from Forgot Password function, this is for reseting
+   * repairman account's password with using his credential, either 
+   * email address or employee ID, new password, and verification code
+   * which can be seen in mailbox. This function will return json
+   * object which contains respond number and message to displayed.
+   * 
+   * @param   credential      Repairman's email address or employee ID
+   * @param   newPassword     Repairman account's new password
+   * @param   reNewPassword   Repairman account's new password, to verify
+   * @param   verifCode       Verification which sent into repairman's mailbox
+   * 
+   * @returns JSON            Json object which contains RespondNum and Message
+   * 
+   * @example
+   * 
+   * {
+   *    "RespondNum": 1,
+   *    "Message": "Registration success!"
+   * }
+   */
   async resetPassword (credential: string, newPassword: string, reNewPassword: string, verifCode: string) {
 
     let url = this.urlResetPassowrd;
@@ -294,15 +337,34 @@ export class DispenserAPIService {
     return returnValue;
   }
 
+  /**
+   * Get the information of repairman using either email address or
+   * employee ID. This function will return repairman's full name,
+   * email address, employee ID, and his profile picture in base64
+   * string form. Noted that this will not return the password.
+   * 
+   * @param   credential  Repairman's email address or employee ID
+   * 
+   * @returns JSON        Json object which contains repairman's information
+   * 
+   * @example
+   * 
+   * {
+   *    "FullName": "Mr. Fulan",
+   *    "Email": "fulanATexample.com",
+   *    "EmployeeID": 12345,
+   *    "Picture": "...",
+   * }
+   */
   async getRepairmanProfile (credential: string) {
 
     let url = this.urlGetRepairmanProfile + credential;
 
     let returnValue = {
-      "FullName": "",
-      "Email": "",
-      "EmployeeID": "",
-      "Picture": "",
+      "FullName": null,
+      "Email": null,
+      "EmployeeID": null,
+      "Picture": null,
     };
 
     await this.http.get(url).toPromise()
@@ -403,34 +465,6 @@ export class DispenserAPIService {
    *      Status: 7,
    *      UploadTime: "2019-01-02 20:16:00"
    *    },
-   *    {
-   *      Archive: false,
-   *      ArriveTime: "",
-   *      CompleteTime: "",
-   *      Complete_Index: 0,
-   *      Complete_Source: "",
-   *      Complete_Source2: "",
-   *      Complete_Source3: "",
-   *      ConfirmTIme: "",
-   *      Delete: false,
-   *      Description: "Uable to water",
-   *      Device_ID: "T4_04_01",
-   *      Email: "muhamadaldy17@gmail.com",
-   *      ErrorType: 2,
-   *      Index: 0,
-   *      Maintainer: "",
-   *      MaintenanceDoneTime: "",
-   *      MissionNumber: 54,
-   *      NotifyTime: "",
-   *      RepairCallTime: "",
-   *      RepairDoneTime: "",
-   *      Result: null,
-   *      Source: "",
-   *      Source2: "",
-   *      Source3: "",
-   *      Status: 1,
-   *      UploadTime: "2019-07-30 10:12:17"
-   *    },
    *    ...
    * ]
    */
@@ -455,11 +489,12 @@ export class DispenserAPIService {
 
   /**
    * Get missions which hasn't done, for missions with status 5 or
-   * has been done go to getRepairmanDoneMissions.
+   * has been done go to getRepairmanDoneMissions. This function need
+   * the employee ID and will return the list of mission.
    * 
-   * @param employee_id Repairman employee ID
+   * @param   employee_id   Repairman employee ID
    * 
-   * @returns JSON array as list of repairman's missions
+   * @returns JSON array    List of repairman's missions
    * 
    * @example
    * 
@@ -483,7 +518,6 @@ export class DispenserAPIService {
    *      "Tel":"02-2733-6160",
    *      "Address":"106台北市大安區基隆路四段43號"
    *  },
-   *
    *  ...
    * 
    * ]
@@ -509,11 +543,12 @@ export class DispenserAPIService {
   
   /**
    * Get missions which has been done, for missions with status 4 or
-   * lower means on going go to getRepairmanMissions.
+   * lower means on going go to getRepairmanMissions. This function need
+   * the employee ID and will return the list of mission.
    * 
-   * @param employee_id Repairman employee ID
+   * @param   employee_id   Repairman employee ID
    * 
-   * @returns JSON array as list of repairman's missions
+   * @returns JSON array    List of repairman's missions has been done
    * 
    * @example
    * 
@@ -542,12 +577,11 @@ export class DispenserAPIService {
    *     "Complete_Source2":"",
    *     "Complete_Source3":""
    *   },
-   * 
    *   ...
    * ]
    */
-  async getRepairmanDoneMissions (employee_id: string) {
-
+  async getAssignmentDone (employee_id: string) {
+    
     let url = this.urlGetRepairmanDoneTask + employee_id;
 
     let returnValue = [{}];
@@ -565,103 +599,154 @@ export class DispenserAPIService {
     return returnValue;
   }
 
-  async getAssignmentDone (device_id: string, employee_id: string) {
+  /**
+   * Get raw missions data from getRepairmanMissions and process into
+   * today mission by comparing with the nowTime. It will only fetch
+   * data which has same date but before the deadline time. This function
+   * will return JSON array as list of today missions.
+   * 
+   * @param   employee_id   Repairman's ID
+   * @param   nowTime       Current time when the app used
+   * 
+   * @returns JSON array    List of today missions
+   * 
+   * @example
+   * 
+   * [
+   *    {
+   *        Address: "",
+   *        Building: "Management Building 3F",
+   *        CompleteTime: "",
+   *        ConfirmTime: "2019-08-05 12:00:00",
+   *        Description: "Leaking water",
+   *        Device_ID: "MA_03_01",
+   *        ErrorType: 3,
+   *        Index: 2,
+   *        Maintainer: "Mr. Fulan",
+   *        Maintainer_ID: "12345678",
+   *        MissionNumber: 391294217491,
+   *        Name: "NTUST",
+   *        NotifyTime: "2019-08-05 08:00:00",
+   *        Position: "Next to the elevator",
+   *        RepairCallTime: "2019-08-19 20:00:00",
+   *        Source: " ... ",
+   *        Source2: " ... ",
+   *        Source3: null,
+   *        Tel: "09293129498",
+   *        Type: "UW-333AS-1"
+   *    },
+   *    
+   *    ...
+   * ]
+   */
+  async getAssignmentToday (employee_id: string, nowTime: string) {
     
     // get data from RepairCondition
-    let data = await this.getDispenserRepairCondition(device_id);
+    let data = await this.getRepairmanMissions(employee_id);
     let returnArray = [];
 
     // for every data will be filtered to get what have been done
     for (let i = 0 ; i < data.length ; i++) {
+     
+      let missionTime = UnitConverter.convertApiTimeToJson(data[i]['RepairCallTime']);
+      let currentTime = UnitConverter.convertApiTimeToJson(nowTime);
+      
+      // if data has same day as mission deadline
+      if (
+        missionTime['Year'] === currentTime['Year'] &&
+        missionTime['Month'] === currentTime['Month'] &&
+        missionTime['DateOfMonth'] === currentTime['DateOfMonth']
+      ) {
 
-      // if data contains the employee id we need
-      if (data[i]['Maintainer_ID'] === employee_id) {
+        let dateCurrentTime = UnitConverter.convertApiTimeToDate(nowTime).getTime();
+        let dateMissionTime = UnitConverter.convertApiTimeToDate(data[i]['RepairCallTime']).getTime();
+        
+        // if data is under the deadline time
+        if (dateCurrentTime <= dateMissionTime) {
 
-        // if data contains status above-equal to 5 and has repair time done
-        if (data[i]['Status'] >= 5 && data[i]['RepairDoneTime'] !== "") {
-          
+          // put into data will be returned
           returnArray.push(data[i]);
-        }  
+        }
       }
     }
 
-    return returnArray;
+    return returnArray;  
   }
 
-  async getAssignmentToday (device_id: string, employee_id: string, nowTime: string) {
+  /**
+   * Get raw missions data from getRepairmanMissions and process into
+   * future mission by comparing with the nowTime. Similar to today
+   * mission but this will fetch data which for next and future day.
+   * This function will return JSON array as list of today missions.
+   * 
+   * @param   employee_id   Repairman's ID
+   * @param   nowTime       Current time when the app used
+   * 
+   * @returns JSON array    List of future missions
+   * 
+   * @example
+   * 
+   * [
+   *    {
+   *        Address: "",
+   *        Building: "Management Building 3F",
+   *        CompleteTime: "",
+   *        ConfirmTime: "2019-08-05 12:00:00",
+   *        Description: "Leaking water",
+   *        Device_ID: "MA_03_01",
+   *        ErrorType: 3,
+   *        Index: 2,
+   *        Maintainer: "Mr. Fulan",
+   *        Maintainer_ID: "12345678",
+   *        MissionNumber: 391294217491,
+   *        Name: "NTUST",
+   *        NotifyTime: "2019-08-05 08:00:00",
+   *        Position: "Next to the elevator",
+   *        RepairCallTime: "2019-09-01 20:00:00",
+   *        Source: " ... ",
+   *        Source2: " ... ",
+   *        Source3: null,
+   *        Tel: "09293129498",
+   *        Type: "UW-333AS-1"
+   *    },
+   *    
+   *    ...
+   * ]
+   */
+  async getAssignmentNext (employee_id: string, nowTime: string) {
     
     // get data from RepairCondition
-    let data = await this.getDispenserRepairCondition(device_id);
+    let data = await this.getRepairmanMissions(employee_id);
     let returnArray = [];
 
     // for every data will be filtered to get what have been done
     for (let i = 0 ; i < data.length ; i++) {
 
-      // if data contains the employee id we need
-      if (data[i]['Maintainer_ID'] === employee_id) {
+      let missionTime = UnitConverter.convertApiTimeToJson(data[i]['RepairCallTime']);
+      let currentTime = UnitConverter.convertApiTimeToJson(nowTime);
 
-        // if data contains status = 4 and repair call time
-        if (data[i]['Status'] === 4 && data[i]['RepairCallTime'] !== "") {
-
-          let missionTime = UnitConverter.convertApiTimeToJson(data[i]['RepairCallTime']);
-          let currentTime = UnitConverter.convertApiTimeToJson(nowTime);
-          
-          // if data has same day as mission deadline
-          if (
-            missionTime['Year'] === currentTime['Year'] &&
-            missionTime['Month'] === currentTime['Month'] &&
-            missionTime['DateOfMonth'] === currentTime['DateOfMonth']
-          ) {
-
-            let dateCurrentTime = UnitConverter.convertApiTimeToDate(nowTime).getTime();
-            let dateMissionTime = UnitConverter.convertApiTimeToDate(data[i]['RepairCallTime']).getTime();
-            
-            // if data is under the deadline time
-            if (dateCurrentTime <= dateMissionTime) {
-
-              // put into data will be returned
-              returnArray.push(data[i]);
-            }
+      if (missionTime['Year'] >= currentTime['Year']) {
+        if (missionTime['Month'] >= currentTime['Month']) {
+          if (missionTime['DateOfMonth'] > currentTime['DateOfMonth']) {
+            returnArray.push(data[i]);
           }
-        }  
+        }
       }
     }
 
     return returnArray;
   }
 
-  async getAssignmentNext (device_id: string, employee_id: string, nowTime: string) {
-    
-    // get data from RepairCondition
-    let data = await this.getDispenserRepairCondition(device_id);
-    let returnArray = [];
-
-    // for every data will be filtered to get what have been done
-    for (let i = 0 ; i < data.length ; i++) {
-
-      // if data contains the employee id we need
-      if (data[i]['Maintainer_ID'] === employee_id) {
-
-        // if data contains status = 4 and repair call time
-        if (data[i]['Status'] === 4 && data[i]['RepairCallTime'] !== "") {
-          
-          let missionTime = UnitConverter.convertApiTimeToJson(data[i]['RepairCallTime']);
-          let currentTime = UnitConverter.convertApiTimeToJson(nowTime);
-
-          if (missionTime['Year'] >= currentTime['Year']) {
-            if (missionTime['Month'] >= currentTime['Month']) {
-              if (missionTime['DateOfMonth'] > currentTime['DateOfMonth']) {
-                returnArray.push(data[i]);
-              }
-            }
-          }
-        }  
-      }
-    }
-
-    return returnArray;
-  }
-
+  /**
+   * To attend a mission by the repairman and notify that the repairman
+   * has been arrived, means ready to fix the dispenser problem. This
+   * function need the mission number and it will return response number
+   * as success or failed.
+   * 
+   * @param   mission_num   Mission's number that assigned to the repairman
+   * 
+   * @returns number        Return 1 for success, 0 for failed, and -1 for error
+   */
   async repairmanHasArrived (mission_num: number) {
 
     let url = this.urlRepairmanArrived;
@@ -683,7 +768,19 @@ export class DispenserAPIService {
       });
   }
 
-  async repairCompleteReport (file: any, mission_num: number, description: string) {
+  /**
+   * To complete the mission, repairman use this function to fill
+   * the complete report with the file contains maximum 3 of report
+   * pictures, mission number, and description as result of repairment.
+   * This function will return boolean value as success or failed.
+   * 
+   * @param   file          Pictures of repairment result, maximum 3
+   * @param   mission_num   Mission number that assigned to repairman
+   * @param   description   Result of done repairment
+   * 
+   * @returns boolean       True for success, false for failed
+   */
+  async repairmentCompleteReport (file: any, mission_num: number, description: string) {
 
     let url = this.urlCompleteMission;
 
@@ -712,6 +809,20 @@ export class DispenserAPIService {
       });
   }
 
+  /**
+   * This function has similar to repairment complete report except
+   * it doesn't require report picture because the repairment is
+   * not complete yet. Use this function for postpone or delayed
+   * repairment with using mission number and description of reason.
+   * This function will return boolean value as success or failed.
+   * Noted that by using this function will not update the dispenser
+   * repair status and repair complete timestamp.
+   * 
+   * @param   mission_num   Mission number that assigned to repairman
+   * @param   description   Reason of postpone/delayed repairment
+   * 
+   * @returns boolean       True for success, false for failed
+   */
   async repairmentNotCompleteReport (mission_num: number, description: string) {
 
   }

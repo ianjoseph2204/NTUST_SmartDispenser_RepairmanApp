@@ -38,7 +38,11 @@ export class ProfilePage implements OnInit {
       // set attributes
       this.employee_name = getProfile['FullName'];
       this.employee_email = getProfile['Email'];
-      this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
+      
+      // set image if not null
+      if (getProfile['Picture'] !== null) {
+        this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
+      }
     } else {
 
       // set all into null
