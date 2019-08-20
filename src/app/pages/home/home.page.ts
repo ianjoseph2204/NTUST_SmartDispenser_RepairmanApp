@@ -14,9 +14,7 @@ import {StaticVariables} from '../../classes/StaticVariables/static-variables';
 export class HomePage {
 
   // initial configuration for ion-slide
-  slideOpts = {
-    initialSlide: 1
-  };
+  slideOpts = { initialSlide: 1 };
 
   // field variable
   doneMissionList = null;
@@ -50,20 +48,20 @@ export class HomePage {
     this.fragmentTitle = this.fragmentTitleArray[1];
     this.currentTime = UnitConverter.convertDateToApiTimeFormat(new Date());
 
-    // dummy data
-    this.device_id = "MA_03_01";
-
     // get id from preference
     this.employee_id = await this.pref.getData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID);
+
     if (this.employee_id !== null) {
       
       // set profile
       await this.api.getRepairmanProfile(this.employee_id).then((getProfile) => {
-        this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
+        if (getProfile['Picture'] !== null) {
+          this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
+        }
       });
 
       // set Done Mission
-      let doneMissionRawData = await this.api.getAssignmentDone(this.device_id, this.employee_id);
+      let doneMissionRawData = await this.api.getAssignmentDone(this.employee_id);
       if (doneMissionRawData.length !== 0) {
         this.doneMissionList = await this.processDataDoneMission(doneMissionRawData);
       } else {
@@ -71,7 +69,7 @@ export class HomePage {
       }    
 
       // set Today Mission
-      let todayMissionRawData = await this.api.getAssignmentToday(this.device_id, this.employee_id, this.currentTime);
+      let todayMissionRawData = await this.api.getAssignmentToday(this.employee_id, this.currentTime);
       if (todayMissionRawData.length !== 0) {
         this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
       } else {
@@ -79,7 +77,7 @@ export class HomePage {
       }
 
       // set Future Mission
-      let futureMissionRawData = await this.api.getAssignmentNext(this.device_id, this.employee_id, this.currentTime);
+      let futureMissionRawData = await this.api.getAssignmentNext(this.employee_id, this.currentTime);
       if (futureMissionRawData.length !== 0) {
         this.futureMissionList = await this.processDataFutureMission(futureMissionRawData);
       } else {
@@ -101,12 +99,15 @@ export class HomePage {
     this.loadReady = true;
   }
 
+  /**
+   * Route the repairman to go to profile page
+   */
   profile() {
     this.navCtrl.navigateForward(['profile']);
   }
 
   /**
-   * gETet the index of ion-slides when being
+   * Get the index of ion-slides when being
    * drag and changes slide occured by the user. Initial slide is 1
    * and will change the value to up or down based on user does.
    * Also this function is to choose the title of the Home page where
@@ -123,7 +124,10 @@ export class HomePage {
   }
 
   /**
-   * Safe the Report Detail to Preference.
+   * Safe the Report Detail to Preference, triggered when the repairman
+   * click one of the missions in today missions list.
+   * 
+   * @param   data    Data from mission
    */
   async setDetailReportToPref(data: any){
     await this.pref.setData(StaticVariables.KEY__DEVICE_ID, data['DeviceID']);
@@ -135,57 +139,77 @@ export class HomePage {
   }
 
   /**
-   * Display the modal for of every quest.
+   * Open mission detail as Modal page, a small pop-up page without route
+   * the repairman into another page, that display the detail mission
+   * information. This is used in today missions and done missions.
+   * 
+   * @param missionNumber The mission number to fetch information from API
+   * @param isDoneMission Boolean identification which is from Today or Done Mission page
    */
   async openDetail(missionNumber: number, isDoneMission: boolean) {
 
     let missionList = [];
     let getMission: any;
 
+    // check is the Modal page opened from Today Mission / Done Mission page
     if (isDoneMission) {
-      for (let i = 0 ; i < this.doneMissionList.length ; i++) {
 
+      // for Done Mission the data is inside of each Date group
+      for (let i = 0 ; i < this.doneMissionList.length ; i++) {
         let dataInsideDoneMissionList = this.doneMissionList[i]['Data'];
         for (let j = 0 ; j < dataInsideDoneMissionList.length ; j++) {
-
           missionList.push(dataInsideDoneMissionList[j]);
         }
       }
     } else {
+
+      // for Today Mission the data is already in JSON array
       missionList = this.todayMissionList['Data'];
     }
 
     for (let i = 0 ; i < missionList.length ; i++) {
 
+      // check the same mission number with in missionList array
       if (missionList[i]['MissionNumber'] === missionNumber) {
         getMission = missionList[i];
         break;
       }
     }
 
+    // set some details to preference for complete/uncomplete the mission
     await this.setDetailReportToPref(getMission);
 
+    // create object property for Modal page
     let buildNewMission = {
       'Date': this.missionTodayDate,
       'Data': getMission,
       'DoneMission': isDoneMission
     };
 
+    // create the modal page
     const modal = await this.modalController.create({
       component: DetailPage,
       componentProps: buildNewMission,
       cssClass: 'my-custom-modal-css'
     });
-
     await modal.present();
   }
 
   /**
    * Get year, month, and date from API in String format
    * and return each of them in JSON format.
-   * @param dateString
-   * @returns new array of json contains date divided by day,
-   * month, and year
+   * 
+   * @param   dateString  Date in string format "YEAR-MONTH-DATE HOUR:MINUTE:SECOND"
+   * 
+   * @returns JSON        Json object of year, month, dan date
+   * 
+   * @example
+   * 
+   * {
+   *    "Year": 2019,
+   *    "Month": 1,
+   *    "Day": 21
+   * }
    */
   static getDateDetail (dateString: string) {
 
@@ -201,9 +225,34 @@ export class HomePage {
   }
 
   /**
-   * Group by the quest order by the same date.
-   * @param dataArray
-   * @returns new array of json with grouping by date
+   * Group the missions into the same date, use this only for 
+   * done and future missions. This function will return the list
+   * of missions.
+   * 
+   * @param   dataArray   Array of missions
+   * 
+   * @returns JSON        Json array of missions with grouped by Date
+   * 
+   * @example
+   * 
+   * [
+   *    {
+   *        "dateDetails": {
+   *            "Day": 21,
+   *            "Month": 11,
+   *            "Year": 2019,
+   *        },
+   *        "Data": {
+   *            [
+   *                { ... },
+   *                { ... },
+   *                ...
+   *            ]
+   *        }
+   *    },
+   * 
+   *    ...
+   * ]
    */
   static groupByDate (dataArray: any) {
 
@@ -216,38 +265,48 @@ export class HomePage {
     let arrayData = [];
     let arrayPerDate = [];
 
+    // for every data inside the parameter
     for (let i = 0 ; i < dataArray.length ; i++) {
 
+      // set current data from array
       let currentData = dataArray[i];
-
       let currentDate = currentData['dateDetails']['Day'];
       let currentMonth = currentData['dateDetails']['Month'];
       let currentYear = currentData['dateDetails']['Year'];
 
+      // check if it has the same as last Date (Y, M, D) stored
       if (
           currentDate === lastDate &&
           currentMonth === lastMonth &&
           currentYear === lastYear
       ) {
+
+        // push data into arrayPerDate
         arrayPerDate.push({
           "Data": currentData['Data'],
           "machineDetails": currentData['machineDetails']
         });
       } else {
 
+        // if not same then set dateDetails as the last being checked
         let dateDetails = dataArray[i-1]['dateDetails'];
 
+        // push the data into new group array with same date
         arrayData.push({
           "Data": arrayPerDate,
           dateDetails
         });
 
+        // clear the arrayPerDate first
         arrayPerDate = [];
+
+        // then push current data into arrayPerDate
         arrayPerDate.push({
           "Data": currentData['Data'],
           "machineDetails": currentData['machineDetails']
         });
 
+        // set new last Date (Y, M, D)
         lastDate = dataArray[i]['dateDetails']['Day'];
         lastMonth = dataArray[i]['dateDetails']['Month'];
         lastYear = dataArray[i]['dateDetails']['Year'];
@@ -257,6 +316,7 @@ export class HomePage {
     // after loop when last data still not included
     let dateDetails = dataArray[dataArray.length - 1]['dateDetails'];
 
+    // push the last data into arrayPerDate
     arrayData.push({
       "Data": arrayPerDate,
       dateDetails
@@ -266,13 +326,36 @@ export class HomePage {
   }
 
   /**
-   * Add after processed time stamp data into JSON.
-   * @param Data Array of processed data.
+   * Adding the time details to JSON, this will include the Date in
+   * string format, the name of the Day, e.g. Saturday or Tuesday,
+   * Date in Date classformat, and the data being fetched. This
+   * function will return new JSON with added time details.
+   * 
+   * @param   Data    Json object to be added by time details
+   * 
+   * @returns JSON    New Json object which has been added by time details
+   * 
+   * @example
+   * 
+   * {
+   *    "DateString": "August 20" ,
+   *    "DayString": "Tuesday" ,
+   *    "Date": ... ,
+   *    "Data": [ ... ]
+   * }
    */
   addTimeToJSON (Data: any){
+
+    // create new Date class object using the date from MissionTime
     let newDate = UnitConverter.convertApiTimeToDate(Data[0]['MissionTime']);
+
+    // create new Day name based on array
     let newDayString = this.dayNameArray[newDate.getDay()];
+
+    // create new Month name based on array
     let newMonthString = this.monthNameArray[newDate.getMonth()];
+
+    // create new Date in string format
     let DateString = newMonthString + " " + newDate.getDate();
 
     return {
@@ -284,15 +367,38 @@ export class HomePage {
   }
 
   /**
-   * Add time stamp & machine detail to JSON.
-   * @param dataJSON rawData from api.
+   * Add some details into JSON object, this will include Date details
+   * and Machine details, e.g. type, location, and the data itself. This
+   * function will return new Json object.
+   * 
+   * @param   dataJSON    Data in json array format
+   * 
+   * @returns JSON array  New data has been added by Date and Machine details
+   * 
+   * @example
+   * 
+   * [
+   *    {
+   *        "dateDetails": { ... },
+   *        "Data": { ... },
+   *        "machineDetails": { ... }
+   *    },
+   * 
+   *    ...
+   * ]
    */
   async addDetailsToJSON(dataJSON: any){
-    // add time stamp and machine details into json
+    
     let dataAddOn = [];
+
+    // for every data inside dataJSON array
     for (let i = 0 ; i < dataJSON.length ; i++) {
       let Data = dataJSON[i];
+      
+      // create new Date details
       let dateDetails = HomePage.getDateDetail(Data['RepairCallTime']);
+
+      // create new Machine details
       let machineDetails = await this.api.getDispenserDetail(Data['Device_ID']);
 
       let newJson = {
@@ -304,30 +410,40 @@ export class HomePage {
       dataAddOn.push(newJson);
     }
 
-    // grouping by date
     return dataAddOn;
   }
 
   /**
-   * Process the data for Done Mission page.
-   * @param dataJson The raw data for Done Mission page.
+   * Function to process data for Done Mission, it will need raw data
+   * from Done Mission API and will return the result that ready to
+   * be displayed.
+   * 
+   * @param   dataJson    Raw data from Done Mission API
+   * 
+   * @returns JSON array  Result data which ready to be displayed
    */
   async processDataDoneMission (dataJson: any) {
 
-    // grouping by date
+    // add some details to each data
     let dataAddDetails = await this.addDetailsToJSON(dataJson);
+
+    // group the data into the same Date
     let dataGroupingDate = await HomePage.groupByDate(dataAddDetails);
 
-    // processing data into new json form
+    // for every data being processed will put into resultArray array
     let resultArray = [];
     for (let i = 0 ; i < dataGroupingDate.length ; i++) {
+
+      // fetch data from same group
       let getObject = dataGroupingDate[i];
       let Data = [];
 
+      // for every data inside the same group will put into Data array
       for (let j = 0 ; j < getObject['Data'].length ; j++) {
         let getData = getObject['Data'][j]['Data'];
         let ReportImages = [];
 
+        // put the Complete Picture from three attributes into one array
         if (getData['Complete_Index'] === 3) {
           ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source'])});
           ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source2'])});
@@ -341,17 +457,16 @@ export class HomePage {
 
         let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
         let newData = {
-          "ClientName": "..." ,
-          "ClientAddress": "..." ,
+          "ClientName": getData['Name'] ,
+          "ClientAddress": getData['Address'] ,
           "MissionTime": getData['RepairCallTime'] ,
           "MissionTimeOnlyHour": MissionTimeOnlyHour ,
-          "ClientPhone": "..." ,
-          "ClientContactPerson": "..." ,
-          "DeviceID": "MA_04_01",
-          "DeviceType": getObject['Data'][j]['machineDetails']['Type'] ,
-          "DeviceNumber": "..." ,
-          "DeviceBuildingLocation": "Management Building 4F",
-          "DevicePlacementPosition": "next to the elevator",
+          "ClientPhone": getData['Tel'] ,
+          "ClientContactPerson": getData['Name'] ,
+          "DeviceID": getData['Device_ID'],
+          "DeviceType": getData['Type'] ,
+          "DeviceBuildingLocation": getData['Building'] ,
+          "DevicePlacementPosition": getData['Position'] ,
           "ErrorCode": getData['ErrorType'] ,
           "ProblemDescription": getData['Description'] ,
           "NotificationTime": getData['NotifyTime'] ,
@@ -372,42 +487,48 @@ export class HomePage {
   }
 
   /**
-   * Process the data for Today Mission page.
-   * @param dataJson The raw data for Today Mission.
+   * Function to process data for Today Mission, it will need raw data
+   * from Today Mission API and will return the result that ready to
+   * be displayed.
+   * 
+   * @param   dataJson      Raw data from Today Mission API
+   * 
+   * @returns JSON object   Result data which ready to be displayed
    */
   async processDataTodayMission (dataJson: any) {
 
+    // add some details to each data
     let dataAddOn = await this.addDetailsToJSON(dataJson);
 
-    // processing data into new json form
+    // for every data being processed will put into resultArray array
     let resultArray = [];
     for (let i = 0 ; i < dataAddOn.length ; i++) {
-      let getObject = dataAddOn[i];
+      let getObject = dataAddOn[i]['Data'];
 
-      let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getObject['Data']['RepairCallTime']);
+      let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getObject['RepairCallTime']);
       let newData = {
-        "ClientName": "..." ,
-        "ClientAddress": "..." ,
-        "MissionTime": getObject['Data']['RepairCallTime'] ,
+        "ClientName": getObject['Name'] ,
+        "ClientAddress": getObject['Address'] ,
+        "MissionTime": getObject['RepairCallTime'] ,
         "MissionTimeOnlyHour": MissionTimeOnlyHour ,
-        "ClientPhone": "..." ,
-        "ClientContactPerson": "..." ,
-        "DeviceID": "...",
-        "DeviceType": getObject['machineDetails']['Type'] ,
-        "DeviceNumber": "..." ,
-        "DeviceBuildingLocation": "...",
-        "DevicePlacementPosition": "...",
-        "ErrorCode": getObject['Data']['ErrorType'] ,
-        "ProblemDescription": getObject['Data']['Description'] ,
-        "NotificationTime": getObject['Data']['NotifyTime'] ,
-        "Repairman": getObject['Data']['Maintainer'] ,
+        "ClientPhone": getObject['Tel'] ,
+        "ClientContactPerson": getObject['Name'] ,
+        "DeviceID": getObject['Device_ID'],
+        "DeviceType": getObject['Type'] ,
+        "DeviceBuildingLocation": getObject['Building'] ,
+        "DevicePlacementPosition": getObject['Position'] ,
+        "ErrorCode": getObject['ErrorType'] ,
+        "ProblemDescription": getObject['Description'] ,
+        "NotificationTime": getObject['NotifyTime'] ,
+        "Repairman": getObject['Maintainer'] ,
         "ClientNumber": "..." ,
-        "MissionNumber": getObject['Data']['MissionNumber'] ,
+        "MissionNumber": getObject['MissionNumber'] ,
       };
 
       resultArray.push(newData);
     }
 
+    // create new Date for Today Mission and add to become new Json object
     let newDate = this.monthNameArray[dataAddOn[0]['dateDetails']['Month'] - 1] + " " + dataAddOn[0]['dateDetails']['Day'];
     return {
       "Date": newDate,
@@ -416,36 +537,46 @@ export class HomePage {
   }
 
   /**
-   * Process the data for Future Mission page.
-   * @param dataJson The raw data for Future Mission.
+   * Function to process data for Done Mission, it will need raw data
+   * from Done Mission API and will return the result that ready to
+   * be displayed.
+   * 
+   * @param   dataJson    Raw data from Done Mission API
+   * 
+   * @returns JSON array  Result data which ready to be displayed
    */
   async processDataFutureMission(dataJson: any) {
 
+    // add some details to each data
     let dataAddDetails = await this.addDetailsToJSON(dataJson);
+
+    // group the data into the same Date
     let dataGroupingDate = await HomePage.groupByDate(dataAddDetails);
 
-    // processing data into new json form
+    // for every data being processed will put into resultArray array
     let resultArray = [];
     for (let i = 0 ; i < dataGroupingDate.length ; i++) {
+
+      // fetch data from same group
       let getObject = dataGroupingDate[i];
       let Data = [];
 
+      // for every data inside the same group will put into Data array
       for (let j = 0 ; j < getObject['Data'].length ; j++) {
         let getData = getObject['Data'][j]['Data'];
 
         let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
         let newData = {
-          "ClientName": "..." ,
-          "ClientAddress": "..." ,
+          "ClientName": getData['Name'] ,
+          "ClientAddress": getData['Address'] ,
           "MissionTime": getData['RepairCallTime'] ,
           "MissionTimeOnlyHour": MissionTimeOnlyHour ,
-          "ClientPhone": "..." ,
-          "ClientContactPerson": "..." ,
-          "DeviceID": "...",
-          "DeviceType": getObject['Data'][j]['machineDetails']['Type'] ,
-          "DeviceNumber": "..." ,
-          "DeviceBuildingLocation": "...",
-          "DevicePlacementPosition": "...",
+          "ClientPhone": getData['Tel'] ,
+          "ClientContactPerson": getData['Name'] ,
+          "DeviceID": getData['Device_ID'],
+          "DeviceType": getData['Type'] ,
+          "DeviceBuildingLocation": getData['Building'] ,
+          "DevicePlacementPosition": getData['Position'] ,
           "ErrorCode": getData['ErrorType'] ,
           "ProblemDescription": getData['Description'] ,
           "NotificationTime": getData['NotifyTime'] ,
@@ -456,20 +587,8 @@ export class HomePage {
 
         Data.push(newData);
       }
-
-      let newDate = UnitConverter.convertApiTimeToDate(Data[0]['MissionTime']);
-      let newDayString = this.dayNameArray[newDate.getDay()];
-      let newMonthString = this.monthNameArray[newDate.getMonth()];
-      let DateString = newMonthString + " " + newDate.getDate();
-
-      let newData = {
-        "DateString": DateString ,
-        "DayString": newDayString ,
-        "Date": newDate ,
-        "Data": Data
-      };
-
-      resultArray.push(newData);
+      
+      resultArray.push(await this.addTimeToJSON(Data));
     }
 
     return resultArray;
