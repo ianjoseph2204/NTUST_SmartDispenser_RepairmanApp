@@ -124,6 +124,38 @@ export class HomePage {
   }
 
   /**
+   * Sort the array by using Date, only for missions because parameter
+   * being used is dateInDateClass inside the JSON object after each
+   * data has been added some details by addDetailsToJSON function.
+   * 
+   * @param myArray       Data array being to sort, it will globally affect
+   * @param isFromLatest  Boolean value to check the sorting point of view
+   */
+  async sortFunction (myArray: any, isFromLatest: boolean) {
+    await myArray.sort((a: any, b: any) => {
+      let dateA = new Date(a['dateInDateClass']), dateB = new Date(b['dateInDateClass']);
+  
+      if (isFromLatest){
+
+        // sort from the latest Date
+        if (dateB > dateA)
+          return 1;
+        if (dateB < dateA)
+          return -1;
+      } else {
+
+        // sort from the newest Date
+        if (dateB < dateA)
+          return 1;
+        if (dateB > dateA)
+          return -1;
+      }
+
+      return 0;
+    });
+  }
+
+  /**
    * Safe the Report Detail to Preference, triggered when the repairman
    * click one of the missions in today missions list.
    * 
@@ -401,7 +433,10 @@ export class HomePage {
       // create new Machine details
       let machineDetails = await this.api.getDispenserDetail(Data['Device_ID']);
 
+      let dateInDateClass = UnitConverter.convertApiTimeToDate(Data['RepairCallTime']);
+
       let newJson = {
+        dateInDateClass,
         dateDetails,
         Data,
         machineDetails
@@ -426,6 +461,9 @@ export class HomePage {
 
     // add some details to each data
     let dataAddDetails = await this.addDetailsToJSON(dataJson);
+
+    // sort the array from the latest
+    await this.sortFunction(dataAddDetails, true);
 
     // group the data into the same Date
     let dataGroupingDate = await HomePage.groupByDate(dataAddDetails);
@@ -499,6 +537,9 @@ export class HomePage {
 
     // add some details to each data
     let dataAddOn = await this.addDetailsToJSON(dataJson);
+    
+    // sort the array from the newest
+    await this.sortFunction(dataAddOn, false);
 
     // for every data being processed will put into resultArray array
     let resultArray = [];
@@ -549,6 +590,9 @@ export class HomePage {
 
     // add some details to each data
     let dataAddDetails = await this.addDetailsToJSON(dataJson);
+
+    // sort the array from the newest
+    await this.sortFunction(dataAddDetails, false);
 
     // group the data into the same Date
     let dataGroupingDate = await HomePage.groupByDate(dataAddDetails);
