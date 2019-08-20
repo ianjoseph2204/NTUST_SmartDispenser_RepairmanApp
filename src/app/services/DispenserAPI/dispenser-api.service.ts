@@ -780,7 +780,7 @@ export class DispenserAPIService {
    * 
    * @returns boolean       True for success, false for failed
    */
-  async repairmentCompleteReport (file: any, mission_num: number, description: string) {
+  async repairCompleteRepair (file: any, mission_num: number, description: string) {
 
     let url = this.urlCompleteMission;
 
