@@ -10,4 +10,5 @@ export class StaticVariables {
     public static KEY__DEVICE_PLACEMENT_LOC = "device_placement_location";
 
     public static KEY__PROBLEM_DESCRIPTION = "problem_description";
+    public static KEY__MISSION_NUMBER: "mission_number";
 }

@@ -168,6 +168,7 @@ export class HomePage {
     await this.pref.setData(StaticVariables.KEY__DEVICE_BUILDING_LOC, data['DeviceBuildingLocation']);
     await this.pref.setData(StaticVariables.KEY__DEVICE_PLACEMENT_LOC, data['DevicePlacementPosition']);
     await this.pref.setData(StaticVariables.KEY__PROBLEM_DESCRIPTION, data['ProblemDescription']);
+    await this.pref.setData(StaticVariables.KEY__MISSION_NUMBER, data['MissionNumber'])
   }
 
   /**

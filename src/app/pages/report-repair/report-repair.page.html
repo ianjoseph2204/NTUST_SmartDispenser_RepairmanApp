@@ -1,4 +1,4 @@
-<ion-header xmlns:border-radius="http://www.w3.org/1999/xhtml">
+<ion-header>
   <ion-toolbar>
     <div class="header">
       <span>
@@ -6,7 +6,7 @@
           <ion-icon style="zoom: 1.2;" name="ios-arrow-back"></ion-icon>
         </span>
         <span class="report-repairing-text">Report repairing progress</span>
-        <span class="submit-button">Submit</span>
+        <span *ngIf="result_description!=''" class="submit-button" (click)="submitButton()">Submit</span>
       </span>
     </div>
   </ion-toolbar>
@@ -16,7 +16,7 @@
 
   <div class="icon-space">
     <div class="icon-jellyfish">
-      <img src="assets\acuo-avatar\group@3x.png" alt="avatar" style="border-radius: 50px;">
+      <img src="assets\acuo-avatar\group@3x.jpg" alt="avatar" style="border-radius: 50px;">
     </div>
   </div>
   <!--Card for User report information-->
@@ -29,7 +29,8 @@
     </span>
     <span class="detail-property">Location</span>
     <span class="detail-separator">:</span>
-    <span class="detail-information">{{device_building_position}}, {{device_placement_position}}</span>
+    <span *ngIf="device_building_position!=null && device_placement_position!=null" class="detail-information">{{device_building_position}}, {{device_placement_position}}</span>
+    <span *ngIf="device_building_position==null && device_placement_position==null" class="detail-information"> </span>
 
     <span class="detail-logo">
       <ion-icon color="primary" name="pricetag"></ion-icon>
@@ -65,7 +66,9 @@
     <div class="description-text">Description</div>
 
     <div class="description-textarea">
-      <ion-textarea placeholder="Write down your progress on this repair..."></ion-textarea>
+      <ion-item>
+        <ion-textarea [(ngModel)]="result_description" placeholder="Write down your progress on this repair..."></ion-textarea>
+      </ion-item>
     </div>
 
     <div class="description-text">Upload photos</div>
@@ -90,7 +93,7 @@
         <!--The display of the picture-->
         <div *ngIf="urlImage[0] !== null">
           <div class="image-upload-space">
-            <img [src]="urlImage[0]" class="imageUrl">
+            <img alt="camera" [src]="urlImage[0]" class="imageUrl">
           </div>
           <div class="delete" (click)="delete(0)"><u><b>Delete</b></u></div>
         </div>
@@ -113,7 +116,7 @@
         <!--The display of the picture-->
         <div *ngIf="urlImage[1] !== null">
           <div class="image-upload-space">
-            <img [src]="urlImage[1]" class="imageUrl">
+            <img alt="camera" [src]="urlImage[1]" class="imageUrl">
           </div>
           <div class="delete" (click)="delete(1)"><u><b>Delete</b></u></div>
         </div>
@@ -136,7 +139,7 @@
         <!--The display of the picture-->
         <div *ngIf="urlImage[2] !== null">
           <div class="image-upload-space">
-            <img [src]="urlImage[2]" class="imageUrl">
+            <img alt="camera" [src]="urlImage[2]" class="imageUrl">
           </div>
           <div class="delete" (click)="delete(2)"><u><b>Delete</b></u></div>
         </div>
