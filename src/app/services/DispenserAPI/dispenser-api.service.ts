@@ -63,15 +63,18 @@ export class DispenserAPIService {
    * email and password. The password should be input
    * again in the page to confirm password is same and
    * no mistake.
-   * 
+   *
+   * @param fullname
    * @param     email       Email address of the user
    * @param     password    Password of the user
    * @param     repassword  Re type the password
-   * 
+   *
+   * @param employee_id
+   * @param photo
    * @returns   json        Return json object with respond number and message
-   * 
+   *
    * @example
-   * 
+   *
    * {
    *    "RepsondNum": 1,
    *    "Message": "Registration success!"
@@ -116,7 +119,7 @@ export class DispenserAPIService {
         "EmployeeID": employee_id,
         "Password": password,
         "Picture": photo
-      }      
+      };
 
       let httpOption = await {
         headers: new HttpHeaders({
@@ -226,7 +229,7 @@ export class DispenserAPIService {
     let returnValue = {
       "RepsondNum": -1,
       "Message": "Null message."
-    }
+    };
 
     try {
       token = await this.getToken();
@@ -341,7 +344,7 @@ export class DispenserAPIService {
       "Building": "",
       "Position": "",
       "Type": ""
-    }
+    };
 
     await this.http.get(url).toPromise()
       .then((result) => {
@@ -680,7 +683,7 @@ export class DispenserAPIService {
       });
   }
 
-  async repairmentCompleteReport (file: any, mission_num: number, description: string) {
+  async repairCompleteReport (file: any, mission_num: number, description: string) {
 
     let url = this.urlCompleteMission;
 
@@ -704,7 +707,7 @@ export class DispenserAPIService {
         return false;
       })
       .catch((e) => {
-        console.error("Function error: on repairmentCompleteReport => " + e);
+        console.error("Function error: on repairCompleteReport => " + e);
         return false;
       });
   }
