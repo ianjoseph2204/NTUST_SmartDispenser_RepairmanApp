@@ -43,6 +43,7 @@ export class ProfilePage implements OnInit {
       if (getProfile['Picture'] !== null) {
         this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
       }
+      
     } else {
 
       // set all into null
@@ -53,12 +54,21 @@ export class ProfilePage implements OnInit {
     }
   }
 
+  /**
+   * To going back, or route back, to the previous
+   * opened page.
+   */
   backFunc () {
     this.navCtrl.back();
   }
 
+  /**
+   * To perform logout, remove email address and ID from preference,
+   * and bring the repairman into Login page.
+   */
   async logout () {
     
+    // create alert when perform logout
     let myAlert = await this.alertCtrl.create({
       mode: "ios",
       header: "Log Out",
@@ -71,6 +81,8 @@ export class ProfilePage implements OnInit {
         }, {
           text: 'Sign Out',
           handler: async () => {
+
+            // reset repairman email address and ID value from preference
             await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_EMAIL, null);
             await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID, null);
 

@@ -70,14 +70,20 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * When profile picture being clicked and select a picture
+   * to assigned to be profile picture.
+   * 
+   * @param event Event when being click and upload picture
+   */
   async onFileSelect(event: any) {
 
+    // check if target file is bigger than 10 MB
     if (event.target.files[0].size <= 10485760) {
 
       // Check image length, image cannot empty
       if (event.target.files.length > 0) {
         this.fileImage = event.target.files[0];
-
         var reader = new FileReader();
 
         // Read file as data url
@@ -87,7 +93,6 @@ export class RegisterPage implements OnInit {
         reader.onload = async () => {
           this.urlImage = reader.result;
         }
-
         this.alreadyUpload = true;
       }
 
@@ -110,6 +115,11 @@ export class RegisterPage implements OnInit {
     }
   }
 
+  /**
+   * Sign Up button is clicked and route repairman to Register Page.
+   * This function will send the data into the API and return a value
+   * to know if success or failed.
+   */
   async signUp() {
 
     // create variable to store alertCtrl
@@ -126,7 +136,9 @@ export class RegisterPage implements OnInit {
       this.password === "" ||
       this.re_password === "" ||
       this.urlImage === null ||
-      this.urlImage === undefined
+      this.urlImage === undefined ||
+      this.emailFalse ||
+      this.passwordFalse
     ) {
       alertHeader = "Form not complete";
       alertMessage = "Please fill all form input include upload profile picture!";
@@ -181,11 +193,36 @@ export class RegisterPage implements OnInit {
     this.dismissLoadCtrl();
   }
 
-  checkEmail (email) {
+  /**
+   * Check the input email address inside the form
+   * with regex, it must have 'AT' symbol and domain.
+   * 
+   * @param email Email address being inputed and checked
+   */
+  checkEmail (email: string) {
+    
+    // regex logic for Email address
+    let regexString = '[^@]+@[^\.\..+]+';
+    let reg = new RegExp(regexString);
 
+    // set emailFalse value with testing regex from input
+    this.emailFalse = !reg.test(email);
   }
 
-  checkPassword (password) {
+  /**
+   * Check the input password inside the form with regex,
+   * it must have at least 1 alphabet, 1 number, and minimum
+   * with 6 characters.
+   * 
+   * @param email Email address being inputed and checked
+   */
+  checkPassword (password: string) {
     
+    // regex logic for Password
+    let regexString = '^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$';
+    let reg = new RegExp(regexString);
+
+    // set emailFalse value with testing regex from input
+    this.passwordFalse = !reg.test(password);    
   }
 }

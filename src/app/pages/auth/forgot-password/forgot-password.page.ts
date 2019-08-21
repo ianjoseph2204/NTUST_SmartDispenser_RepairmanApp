@@ -56,6 +56,17 @@ export class ForgotPasswordPage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Reset function to route into Reset Password page. There are
+   * two condition: one is when the repairman click the CONTINUE
+   * button, it will send the credential to API and route the
+   * repairman to Reset Password page, and the other one when the
+   * repairman click the RESET link on bottom, it only route into
+   * Reset Password page.
+   * 
+   * @param hasCredential True if repairman click CONTINUE button, false
+   *                      for click RESET button 
+   */
   async reset (hasCredential: boolean) {
 
     if (!hasCredential){
@@ -70,6 +81,7 @@ export class ForgotPasswordPage implements OnInit {
       let myToastMessage: string = "";
       const {credential} = this;
 
+      // check if email address or ID form is filled
       if (credential === "") {
         myToastMessage = "Please fill in all the required form!"
       } else {
@@ -77,6 +89,8 @@ export class ForgotPasswordPage implements OnInit {
         // create loading screen
         await this.createLoadCtrl();
 
+        // send data into API to generate verification code
+        // success is 1 and failed is others
         let resultData = await this.api.forgotPassword(credential);
         if (resultData === 1) {
           myToastMessage = "Verification code has been sent to your email address!";

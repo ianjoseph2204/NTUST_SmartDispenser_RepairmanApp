@@ -14,6 +14,9 @@ export class ResetPasswordPage implements OnInit {
   new_password = "";
   re_new_password = "";
   verif_code = "";
+  
+  // password checking attributes
+  passwordFalse = false;
 
   // loadCtrl var
   makeLoading: any;
@@ -59,6 +62,11 @@ export class ResetPasswordPage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Repairman confirm the Reset Password by click the RESET
+   * button, it will send the data to API and return a value
+   * to know if it success or failed.
+   */
   async reset () {
     
     // initial local variables
@@ -67,6 +75,7 @@ export class ResetPasswordPage implements OnInit {
     let myToastMessage: string = "";
     const { credential, new_password, re_new_password, verif_code } = this;
 
+    // check if input form is complete
     if (
       credential === "" ||
       new_password === "" ||
@@ -79,6 +88,8 @@ export class ResetPasswordPage implements OnInit {
       // create loading screen
       await this.createLoadCtrl();
       
+      // send data into API with return value
+      // success is 1 and failed is others with result Message
       let resultData = await this.api.resetPassword(credential, new_password, re_new_password, verif_code);
       myToastRespond = resultData['RepsondNum']
       myToastMessage = resultData['Message'];
@@ -104,5 +115,22 @@ export class ResetPasswordPage implements OnInit {
       this.navCtrl.back();
       this.navCtrl.back();
     }
+  }
+  
+  /**
+   * Check the input password inside the form with regex,
+   * it must have at least 1 alphabet, 1 number, and minimum
+   * with 6 characters.
+   * 
+   * @param email Email address being inputed and checked
+   */
+  checkPassword (password: string) {
+    
+    // regex logic for Password
+    let regexString = '^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$';
+    let reg = new RegExp(regexString);
+
+    // set emailFalse value with testing regex from input
+    this.passwordFalse = !reg.test(password);    
   }
 }

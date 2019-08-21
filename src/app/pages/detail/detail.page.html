@@ -40,13 +40,6 @@
         <span class="item--detail">{{data.DeviceType}}</span>
       </ion-label>
     </ion-item>
-    
-    <ion-item lines="none">
-      <ion-label>
-        <p class="item--title">MACHINE NUMBER</p>
-        <span class="item--detail">{{data.DeviceNumber}}</span>
-      </ion-label>
-    </ion-item>
 
     <ion-item lines="none">
       <ion-label>
@@ -90,7 +83,7 @@
       </ion-label>
     </ion-item>
 
-    <ion-item *ngIf="doneMission">
+    <ion-item *ngIf="doneMission" lines="none">
       <ion-label>
         <p class="item--title">REPORT PICTURES</p>
         <img

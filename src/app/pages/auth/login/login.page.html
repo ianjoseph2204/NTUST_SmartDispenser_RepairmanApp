@@ -1,5 +1,6 @@
 <ion-content class="i-theme1">
 
+  <!-- Union/ACUO icon on top middle -->
   <div class="header">
     <img 
       class="img-header"
@@ -7,31 +8,38 @@
       alt="acuo-icons">
   </div>
 
+  <!-- body content -->
   <div class="section">
     <div class="section-inside">
 
+      <!-- title on middle -->
       <div class="title">
         <h2><b>LOG IN</b></h2>
       </div>
 
+      <!-- email address or ID input form -->
       <ion-item>
         <ion-label position="floating">Email Address/Employee ID</ion-label>
         <ion-input required type="text" [(ngModel)]="credential"></ion-input>
       </ion-item>
 
+      <!-- password input form -->
       <ion-item>
         <ion-label position="floating">Password</ion-label>
         <ion-input required type="password" [(ngModel)]="password"></ion-input>
       </ion-item>
 
+      <!-- forgot password button -->
       <div (click)="recovery()" class="forgot-link">
         <i>Forgot password?</i>
       </div>
   
+      <!-- login button -->
       <div class="btn-yes">
         <ion-button class="i-btn-yes" size="small" fill="solid" expand="block" (click)="login()">Login</ion-button>
       </div>
 
+      <!-- register button -->
       <div class="signup">
         <p>Not registered yet? <ion-text (click)="registerLink()" class="register">SIGN UP</ion-text></p>
       </div>

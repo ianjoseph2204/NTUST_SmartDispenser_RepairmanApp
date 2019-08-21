@@ -60,6 +60,10 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * When LOGIN button was clicked, this function is to perform
+   * login system on Repairman App.
+   */
   async login() {
     
     // initial local variables
@@ -70,6 +74,7 @@ export class LoginPage implements OnInit {
     let id: string;
     const { credential, password } = this;
     
+    // check if email address/ID and password form is filled
     if (credential === "" || password === "") {
       myToastMessage = "Please fill in all the required form!"
     } else {
@@ -77,24 +82,25 @@ export class LoginPage implements OnInit {
       // create loading screen
       await this.createLoadCtrl();
 
+      // send data into API
+      // success is 1 and failed is others
       resultData = await this.api.loginRepairman(credential, password);
-      if (resultData === 1){
-        await this.api.getRepairmanProfile(credential).then((result) => {
-          myToastMessage = "Login success!"
-          id = result['EmployeeID'];
-          email = result['Email'];
-        });
+      if (resultData === 1) {
+        myToastMessage = "Login success!"
+
+        // use Get Repairman Profile API to get the details and set into Preference
+        await this.api.getRepairmanProfile(credential).then(
+          async (result) => {
+            await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_EMAIL, result['Email']);
+            await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID, result['EmployeeID']);
+            this.navCtrl.navigateForward(['home']);
+          }
+        );
       } else if (resultData === 0) {
         myToastMessage = "Email address or password is incorrect!";
       } else {
         myToastMessage = "There is an unexpected error, please try again later!";
       }
-    }
-
-    if (resultData === 1) {
-      await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_EMAIL, email);
-      await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID, id);
-      this.navCtrl.navigateForward(['home']);
     }
 
     // create Toast with myToastMessage as message display
@@ -113,10 +119,16 @@ export class LoginPage implements OnInit {
     this.dismissLoadCtrl();
   }
 
+  /**
+   * Link to Register page
+   */
   registerLink() {
     this.navCtrl.navigateForward(['register']);
   }
 
+  /**
+   * Link to Forgot Password page
+   */
   recovery () {
     this.navCtrl.navigateForward(['forgot-password'])
   }
