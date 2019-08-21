@@ -30,22 +30,27 @@ export class ProfilePage implements OnInit {
     // get id from preference
     this.employee_id = await this.pref.getData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID);
 
-    if (this.employee_id !== null) {
-      
+    this.createProfile(this.employee_id);
+  }
+
+  /**
+   * Get the Employee profile from the database.
+   * @param employee_id The ID of the employee.
+   */
+  async createProfile(employee_id: any){
+    if (employee_id !== null) {
       // get profile from API
-      let getProfile = await this.api.getRepairmanProfile(this.employee_id);
+      let getProfile = await this.api.getRepairmanProfile(employee_id);
 
       // set attributes
       this.employee_name = getProfile['FullName'];
       this.employee_email = getProfile['Email'];
-      
+
       // set image if not null
       if (getProfile['Picture'] !== null) {
         this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
       }
-      
     } else {
-
       // set all into null
       this.employee_id = null;
       this.employee_name = null;
@@ -86,12 +91,12 @@ export class ProfilePage implements OnInit {
             await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_EMAIL, null);
             await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID, null);
 
-            this.navCtrl.navigateRoot(['login']);
+            await this.navCtrl.navigateRoot(['login']);
           }
         }
       ]
     });
     
-    myAlert.present();
+    await myAlert.present();
   }
 }

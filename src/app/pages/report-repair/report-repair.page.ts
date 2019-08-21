@@ -34,7 +34,7 @@ export class ReportRepairPage implements OnInit {
   }
 
   /**
-   * Get data from preference and store it into local variables.
+   * Get the data from preference and store it into local variables.
    */
   async getPrefData(){
     this.device_id = await this.pref.getData(StaticVariables.KEY__DEVICE_ID);
@@ -54,7 +54,7 @@ export class ReportRepairPage implements OnInit {
   }
 
   /**
-   * Method to add image
+   * Add image from gallery or camera.
    */
   async onFileSelect(event: any, index: number) {
     // Limit size image to 10 Mb
