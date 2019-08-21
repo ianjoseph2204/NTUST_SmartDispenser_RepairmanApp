@@ -21,7 +21,6 @@ export class HomePage {
   todayMissionList = null;
   futureMissionList = null;
 
-  missionTodayDate: string;
   fragmentTitle: string;
   device_id: string;
   employee_id: string;
@@ -175,8 +174,8 @@ export class HomePage {
    * Open mission detail as Modal page, a small pop-up page without route
    * the repairman into another page, that display the detail mission
    * information. This is used in today missions and done missions.
-   * 
-   * @param missionNumber The mission number to fetch information from API
+   *
+   * @param mission
    * @param isDoneMission Boolean identification which is from Today or Done Mission page
    */
   async openDetail(mission: any, isDoneMission: boolean) {
@@ -517,27 +516,9 @@ export class HomePage {
     // for every data being processed will put into resultArray array
     let resultArray = [];
     for (let i = 0 ; i < dataAddOn.length ; i++) {
-      let getObject = dataAddOn[i]['Data'];
+      let getData = dataAddOn[i]['Data'];
 
-      let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getObject['RepairCallTime']);
-      let newData = {
-        "ClientName": getObject['Name'] ,
-        "ClientAddress": getObject['Address'] ,
-        "MissionTime": getObject['RepairCallTime'] ,
-        "MissionTimeOnlyHour": MissionTimeOnlyHour ,
-        "ClientPhone": getObject['Tel'] ,
-        "ClientContactPerson": getObject['Name'] ,
-        "DeviceID": getObject['Device_ID'],
-        "DeviceType": getObject['Type'] ,
-        "DeviceBuildingLocation": getObject['Building'] ,
-        "DevicePlacementPosition": getObject['Position'] ,
-        "ErrorCode": getObject['ErrorType'] ,
-        "ProblemDescription": getObject['Description'] ,
-        "NotificationTime": getObject['NotifyTime'] ,
-        "Repairman": getObject['Maintainer'] ,
-        "ClientNumber": "..." ,
-        "MissionNumber": getObject['MissionNumber'] ,
-      };
+      let newData = HomePage.setJSONData(getData);
 
       resultArray.push(newData);
     }
@@ -582,25 +563,7 @@ export class HomePage {
       for (let j = 0 ; j < getObject['Data'].length ; j++) {
         let getData = getObject['Data'][j]['Data'];
 
-        let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
-        let newData = {
-          "ClientName": getData['Name'] ,
-          "ClientAddress": getData['Address'] ,
-          "MissionTime": getData['RepairCallTime'] ,
-          "MissionTimeOnlyHour": MissionTimeOnlyHour ,
-          "ClientPhone": getData['Tel'] ,
-          "ClientContactPerson": getData['Name'] ,
-          "DeviceID": getData['Device_ID'],
-          "DeviceType": getData['Type'] ,
-          "DeviceBuildingLocation": getData['Building'] ,
-          "DevicePlacementPosition": getData['Position'] ,
-          "ErrorCode": getData['ErrorType'] ,
-          "ProblemDescription": getData['Description'] ,
-          "NotificationTime": getData['NotifyTime'] ,
-          "Repairman": getData['Maintainer'] ,
-          "ClientNumber": "..." ,
-          "MissionNumber": getData['MissionNumber'] ,
-        };
+        let newData = HomePage.setJSONData(getData);
 
         Data.push(newData);
       }
@@ -609,5 +572,32 @@ export class HomePage {
     }
 
     return resultArray;
+  }
+
+  /**
+   * Create JSON data for Future & Today mission.
+   * @param getData
+   */
+  static setJSONData(getData){
+    let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
+
+    return {
+      "ClientName": getData['Name'] ,
+      "ClientAddress": getData['Address'] ,
+      "MissionTime": getData['RepairCallTime'] ,
+      "MissionTimeOnlyHour": MissionTimeOnlyHour ,
+      "ClientPhone": getData['Tel'] ,
+      "ClientContactPerson": getData['Name'] ,
+      "DeviceID": getData['Device_ID'],
+      "DeviceType": getData['Type'] ,
+      "DeviceBuildingLocation": getData['Building'] ,
+      "DevicePlacementPosition": getData['Position'] ,
+      "ErrorCode": getData['ErrorType'] ,
+      "ProblemDescription": getData['Description'] ,
+      "NotificationTime": getData['NotifyTime'] ,
+      "Repairman": getData['Maintainer'] ,
+      "ClientNumber": "..." ,
+      "MissionNumber": getData['MissionNumber'] ,
+    };
   }
 }

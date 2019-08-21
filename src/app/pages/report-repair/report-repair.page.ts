@@ -110,7 +110,7 @@ export class ReportRepairPage implements OnInit {
 
     console.log(this.result_description);
 
-    await this.api.repairCompleteRepair(this.fileImage, this.mission_number, this.result_description);
+    await this.api.repairCompleteReport(this.fileImage, this.mission_number, this.result_description);
 
     let alert: any;
 
