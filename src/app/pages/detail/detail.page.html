@@ -86,17 +86,23 @@
     <ion-item *ngIf="doneMission" lines="none">
       <ion-label>
         <p class="item--title">REPORT PICTURES</p>
-        <img
+        <div *ngIf="data.ReportIndex !== 0">
+          <img
           *ngFor="let images of data.ReportImages; let i=index"
           [src]="images.ReportImage"
           alt="image-{{i+1}}"
           class="image-report" />
+        </div>
+        <div *ngIf="data.ReportIndex === 0">
+          <span class="item--detail">No pictures reported.</span>
+        </div>
       </ion-label>
     </ion-item>
 
   </ion-list>
 </ion-content>
-<ion-footer>
+
+<ion-footer *ngIf="!doneMission">
 
   <section class="full-width">
     <ion-button expand="full" *ngIf="!Arrived" (click)="arrived()">Arrived</ion-button>
@@ -105,28 +111,16 @@
       <ion-row>
         <ion-col size="6">
           <div>
-            <ion-button expand="full" (click)="applyForComponent()">Apply for<br>Component</ion-button>
+            <ion-button expand="full" (click)="wantToClearMission(false)">Cannot complete<br>by now</ion-button>
           </div>
         </ion-col>
         <ion-col size="6">
           <div>
-            <ion-button *ngIf="!inputCamera" expand="full" (click)="completeRepair()">Comple Repair</ion-button>
-            <ion-button *ngIf="inputCamera" expand="full" (click)="imageInput.click()">Comple Repair</ion-button>
-            <input type="file" id="file-input" accept="image/*;capture=camera" style="display: none;"
-              (change)="uploadImage($event)" multiple #imageInput>
+            <ion-button expand="full" (click)="wantToClearMission(true)">Complete repair</ion-button>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
   </section>
 
-
-  <!-- <ion-segment>
-    <ion-segment-button>
-      <ion-label>Apply for<br> Component</ion-label>
-    </ion-segment-button>
-    <ion-segment-button>
-      <ion-label>Comple Repair</ion-label>
-    </ion-segment-button>
-  </ion-segment> -->
 </ion-footer>
