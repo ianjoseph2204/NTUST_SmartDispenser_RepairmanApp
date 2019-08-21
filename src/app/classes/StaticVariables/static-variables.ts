@@ -11,4 +11,5 @@ export class StaticVariables {
 
     public static KEY__PROBLEM_DESCRIPTION = "problem_description";
     public static KEY__MISSION_NUMBER = "mission_number";
+    public static KEY__MISSION_DONE_UNDONE__BOOLEAN = "mission_done_undone_boolean";
 }

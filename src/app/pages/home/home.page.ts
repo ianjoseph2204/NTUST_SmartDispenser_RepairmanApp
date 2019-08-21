@@ -582,7 +582,7 @@ export class HomePage {
     let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
 
     return {
-      "ClientName": getData['Name'] ,
+      "ClientName": getData['Company'] ,
       "ClientAddress": getData['Address'] ,
       "MissionTime": getData['RepairCallTime'] ,
       "MissionTimeOnlyHour": MissionTimeOnlyHour ,
@@ -598,6 +598,7 @@ export class HomePage {
       "Repairman": getData['Maintainer'] ,
       "ClientNumber": "..." ,
       "MissionNumber": getData['MissionNumber'] ,
+      "ArriveTime": getData['ArriveTime']
     };
   }
 }
