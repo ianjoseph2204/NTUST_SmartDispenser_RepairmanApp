@@ -11,7 +11,6 @@ export class DetailPage implements OnInit {
 
   data: any;
   doneMission: boolean;
-  Arrived = false;
   inputCamera = false;
 
   image: any = [];
@@ -26,42 +25,22 @@ export class DetailPage implements OnInit {
     this.doneMission = navParams.get('DoneMission');
   }
 
-  ngOnInit() {
+  ngOnInit () {
     console.log(this.data);
     console.log(this.doneMission);
   }
 
-  dismiss() {
+  dismiss () {
     this.modalController.dismiss();
   }
 
-  arrived() {
-    this.Arrived = true;
+  arrived () {
+
   }
 
-  applyForComponent() {
+  wantToClearMission (isMissionDone: boolean) {
+    console.log(isMissionDone);
   }
-
-  // completeRepair() {
-  //   //this.inputCamera = true;
-  //   this.dismiss();
-  //   this.navCtrl.navigateForward(['report-repair']);
-  // }
-
-  // uploadImage(event) { // called each time file input changes
-
-  //   console.log(event.target.files.FileList);
-  //   if (event.target.files) {
-  //     for (let i = 0; i < event.target.files.length; i++) {
-  //       this.reader[i] = new FileReader();
-  //       this.reader[i].readAsDataURL(event.target.files[i]); // read file as data url
-  //       this.reader[i].onload = (event) => { // called once readAsDataURL is completed
-  //         this.image[i] = this.reader[i].result;
-  //       }
-  //     }
-  //     console.log(this.image);
-  //   }
-  // }
 }
 
 class DetailPageImpl extends DetailPage {

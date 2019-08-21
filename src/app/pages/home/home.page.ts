@@ -179,43 +179,15 @@ export class HomePage {
    * @param missionNumber The mission number to fetch information from API
    * @param isDoneMission Boolean identification which is from Today or Done Mission page
    */
-  async openDetail(missionNumber: number, isDoneMission: boolean) {
-
-    let missionList = [];
-    let getMission: any;
-
-    // check is the Modal page opened from Today Mission / Done Mission page
-    if (isDoneMission) {
-
-      // for Done Mission the data is inside of each Date group
-      for (let i = 0 ; i < this.doneMissionList.length ; i++) {
-        let dataInsideDoneMissionList = this.doneMissionList[i]['Data'];
-        for (let j = 0 ; j < dataInsideDoneMissionList.length ; j++) {
-          missionList.push(dataInsideDoneMissionList[j]);
-        }
-      }
-    } else {
-
-      // for Today Mission the data is already in JSON array
-      missionList = this.todayMissionList['Data'];
-    }
-
-    for (let i = 0 ; i < missionList.length ; i++) {
-
-      // check the same mission number with in missionList array
-      if (missionList[i]['MissionNumber'] === missionNumber) {
-        getMission = missionList[i];
-        break;
-      }
-    }
+  async openDetail(mission: any, isDoneMission: boolean) {
 
     // set some details to preference for complete/uncomplete the mission
-    await this.setDetailReportToPref(getMission);
+    await this.setDetailReportToPref(mission);
 
     // create object property for Modal page
     let buildNewMission = {
-      'Date': this.missionTodayDate,
-      'Data': getMission,
+      'Date': await UnitConverter.convertApiTimeToDate(mission['MissionTime']),
+      'Data': mission,
       'DoneMission': isDoneMission
     };
 
