@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api.service';
 import { NavController, ToastController, LoadingController } from '@ionic/angular';
+import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -25,8 +26,16 @@ export class ResetPasswordPage implements OnInit {
     private navCtrl: NavController,
     private api: DispenserAPIService,
     private toastCtrl: ToastController,
-    private loadCtrl: LoadingController
+    private loadCtrl: LoadingController,
+    private chk: LoginSessionService
   ) { }
+
+  ngOnInit() {
+  }
+
+  ionViewDidEnter () {
+    this.chk.blockToAuthPages();
+  }
 
   /**
    * To going back, or route back, to the previous
@@ -57,9 +66,6 @@ export class ResetPasswordPage implements OnInit {
    */
   async dismissLoadCtrl () {
     this.makeLoading.dismiss();
-  }
-
-  ngOnInit() {
   }
 
   /**

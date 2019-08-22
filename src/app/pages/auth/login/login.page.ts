@@ -3,6 +3,7 @@ import { NavController, ToastController, LoadingController } from '@ionic/angula
 import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api.service';
 import { PreferenceManagerService } from 'src/app/services/PreferenceManager/preference-manager.service';
 import { StaticVariables } from 'src/app/classes/StaticVariables/static-variables';
+import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
 
 @Component({
   selector: 'app-login',
@@ -23,8 +24,16 @@ export class LoginPage implements OnInit {
     private api: DispenserAPIService,
     private pref: PreferenceManagerService,
     private toastCtrl: ToastController,
-    private loadCtrl: LoadingController
+    private loadCtrl: LoadingController,
+    private chk: LoginSessionService
   ) { }
+
+  ngOnInit() {
+  }
+
+  ionViewDidEnter () {
+    this.chk.blockToAuthPages();
+  }
 
   /**
    * To going back, or route back, to the previous
@@ -55,9 +64,6 @@ export class LoginPage implements OnInit {
    */
   async dismissLoadCtrl () {
     this.makeLoading.dismiss();
-  }
-
-  ngOnInit() {
   }
 
   /**

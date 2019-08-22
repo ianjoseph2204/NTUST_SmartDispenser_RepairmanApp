@@ -3,6 +3,7 @@ import { ModalController, NavParams, LoadingController, ToastController, NavCont
 import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api.service';
 import { PreferenceManagerService } from 'src/app/services/PreferenceManager/preference-manager.service';
 import { StaticVariables } from 'src/app/classes/StaticVariables/static-variables';
+import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
 
 @Component({
   selector: 'app-detail',
@@ -28,25 +29,24 @@ export class DetailPage implements OnInit {
     private loadCtrl: LoadingController,
     private toastCtrl: ToastController,
     private api: DispenserAPIService,
-    private pref: PreferenceManagerService
+    private pref: PreferenceManagerService,
+    private chk: LoginSessionService
   ) {
     this.data = navParams.get('Data');
     this.doneMission = navParams.get('DoneMission');
   }
 
   ngOnInit () {
-    console.log(this.data);
-    console.log(this.doneMission);
+    this.Arrived = false;
   }
 
   ionViewDidEnter () {
+    this.chk.blockToInternalPages();
     if (this.data['ArriveTime'] !== "") {
       this.Arrived = true;
     } else {
       this.Arrived = false;
-    }
-    console.log(this.Arrived);
-    
+    }    
   }
 
   /**
@@ -88,9 +88,10 @@ export class DetailPage implements OnInit {
     let result = await this.api.repairmanHasArrived(missionNum);
     if (result === 1) {
       this.Arrived = true;
-      toastMessage = "You have successfully arrived on this mission!"
+      toastMessage = "You have successfully arrived on this mission!";
+      StaticVariables.MISSION_UPDATE = true;
     } else {
-      toastMessage = "Failed to arrived on this mission, please try again!"
+      toastMessage = "Failed to arrived on this mission, please try again!";
     }
 
     // create Toast with myToastMessage as message display

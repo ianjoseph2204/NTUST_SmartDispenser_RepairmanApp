@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, AlertController, ToastController, LoadingController } from '@ionic/angular';
+import { NavController, AlertController, LoadingController } from '@ionic/angular';
 import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api.service';
+import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
 
 @Component({
   selector: 'app-register',
@@ -31,10 +32,17 @@ export class RegisterPage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private api: DispenserAPIService,
-    private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
-    private AlertCtrl: AlertController
+    private AlertCtrl: AlertController,
+    private chk: LoginSessionService
   ) { }
+
+  ngOnInit() {
+  }
+
+  ionViewDidEnter () {
+    this.chk.blockToAuthPages();
+  }
 
   /**
    * To going back, or route back, to the previous
@@ -65,9 +73,6 @@ export class RegisterPage implements OnInit {
    */
   async dismissLoadCtrl () {
     this.makeLoading.dismiss();
-  }
-
-  ngOnInit() {
   }
 
   /**
