@@ -12,14 +12,15 @@ export class DetailPage implements OnInit {
   data: any;
   doneMission: boolean;
   inputCamera = false;
+  arrived: boolean = false;
 
   image: any = [];
   reader: any = [];
 
   constructor(
-    public modalController: ModalController,
-    public navParams: NavParams,
-    public navCtrl: NavController
+      public modalController: ModalController,
+      public navParams: NavParams,
+      public navCtrl: NavController
   ) {
     this.data = navParams.get('Data');
     this.doneMission = navParams.get('DoneMission');
@@ -34,16 +35,23 @@ export class DetailPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  arrived () {
-    this.getDeviceIdFromQRCode();
+  setArrival () {
+    this.openQRCodeScanner();
   }
-s
+
+  openQRCodeScanner(){
+    this.navCtrl.navigateForward(['qrcode-scanner']);
+
+
+  }
+
   wantToClearMission (isMissionDone: boolean) {
     console.log(isMissionDone);
   }
 
   getDeviceIdFromQRCode(){
-    let url = "https://smartcampus.et.ntust.edu.tw:5000/dashboard/MA_04_01";
+
+    let url = "";
 
     const words = url.split('/');
     console.log(words);
@@ -51,4 +59,5 @@ s
     let device_id = words[words.length - 1];
     console.log("device id: " + device_id);
   }
+
 }

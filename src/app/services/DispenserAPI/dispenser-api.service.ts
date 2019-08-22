@@ -739,7 +739,7 @@ export class DispenserAPIService {
 
   /**
    * To attend a mission by the repairman and notify that the repairman
-   * has been arrived, means ready to fix the dispenser problem. This
+   * has been setArrival, means ready to fix the dispenser problem. This
    * function need the mission number and it will return response number
    * as success or failed.
    * 
@@ -759,7 +759,7 @@ export class DispenserAPIService {
       .then((success) => {
         return 1;
       }, () => {
-        console.error("Promise rejected: unable to update repairman arrived status!");
+        console.error("Promise rejected: unable to update repairman setArrival status!");
         return 0;
       })
       .catch((e) => {

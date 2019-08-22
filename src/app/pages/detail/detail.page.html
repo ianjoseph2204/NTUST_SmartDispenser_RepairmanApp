@@ -47,7 +47,7 @@
         <span class="item--detail">{{data.ErrorCode}}</span>
       </ion-label>
     </ion-item>
-    
+
     <ion-item lines="none">
       <ion-label>
         <p class="item--title">PROBLEM</p>
@@ -61,7 +61,7 @@
         <span class="item--detail">{{data.NotificationTime}}</span>
       </ion-label>
     </ion-item>
-    
+
     <ion-item lines="none">
       <ion-label>
         <p class="item--title">REPAIRMAN</p>
@@ -75,7 +75,7 @@
         <span class="item--detail">{{data.ClientNumber}}</span>
       </ion-label>
     </ion-item>
-    
+
     <ion-item lines="none">
       <ion-label>
         <p class="item--title">MISSION NUMBER</p>
@@ -88,10 +88,10 @@
         <p class="item--title">REPORT PICTURES</p>
         <div *ngIf="data.ReportIndex !== 0">
           <img
-          *ngFor="let images of data.ReportImages; let i=index"
-          [src]="images.ReportImage"
-          alt="image-{{i+1}}"
-          class="image-report" />
+                  *ngFor="let images of data.ReportImages; let i=index"
+                  [src]="images.ReportImage"
+                  alt="image-{{i+1}}"
+                  class="image-report" />
         </div>
         <div *ngIf="data.ReportIndex === 0">
           <span class="item--detail">No pictures reported.</span>
@@ -105,9 +105,9 @@
 <ion-footer *ngIf="!doneMission">
 
   <section class="full-width">
-    <ion-button expand="full" *ngIf="!Arrived" (click)="arrived()">Arrived</ion-button>
+    <ion-button expand="full" *ngIf="!arrived" (click)="setArrival()">Arrived</ion-button>
 
-    <ion-grid *ngIf="Arrived">
+    <ion-grid *ngIf="arrived">
       <ion-row>
         <ion-col size="6">
           <div>

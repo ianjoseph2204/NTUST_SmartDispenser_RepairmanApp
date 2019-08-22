@@ -9,24 +9,24 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DetailPage } from './detail.page';
+import { QrcodeScannerPage } from './qrcode-scanner.page';
 import {ZXingScannerModule} from '@zxing/ngx-scanner';
 
 const routes: Routes = [
   {
     path: '',
-    component: DetailPage
+    component: QrcodeScannerPage
   }
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes),
-    ZXingScannerModule,
-  ],
-  declarations: [DetailPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        ZXingScannerModule
+    ],
+  declarations: [QrcodeScannerPage]
 })
-export class DetailPageModule {}
+export class QrcodeScannerPageModule {}

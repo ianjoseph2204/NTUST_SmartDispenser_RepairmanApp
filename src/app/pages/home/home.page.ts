@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, ViewChild} from '@angular/core';
 import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {DetailPage} from '../detail/detail.page';
@@ -115,7 +116,7 @@ export class HomePage {
    * Using @ViewChild class to get detect slides index from HTML
    * and IonSlides to use getActiveIndex function.
    */
-  @ViewChild('slides') slides: IonSlides;
+  @ViewChild('slides', {static: true}) slides: IonSlides;
   async slideChanges () {
 
     let index = await this.slides.getActiveIndex();

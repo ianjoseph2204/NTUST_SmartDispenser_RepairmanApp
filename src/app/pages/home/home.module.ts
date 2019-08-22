@@ -7,19 +7,21 @@ import { RouterModule } from '@angular/router';
 import { HomePage } from './home.page';
 
 import { DetailPage } from '../detail/detail.page';
+import {ZXingScannerModule} from '@zxing/ngx-scanner';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: HomePage
-      }
-    ])
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: HomePage
+            }
+        ]),
+        ZXingScannerModule
+    ],
   declarations: [HomePage, DetailPage],
   entryComponents: [DetailPage]
 })
