@@ -35,13 +35,20 @@ export class DetailPage implements OnInit {
   }
 
   arrived () {
-
+    this.getDeviceIdFromQRCode();
   }
-
+s
   wantToClearMission (isMissionDone: boolean) {
     console.log(isMissionDone);
   }
-}
 
-class DetailPageImpl extends DetailPage {
+  getDeviceIdFromQRCode(){
+    let url = "https://smartcampus.et.ntust.edu.tw:5000/dashboard/MA_04_01";
+
+    const words = url.split('/');
+    console.log(words);
+
+    let device_id = words[words.length - 1];
+    console.log("device id: " + device_id);
+  }
 }

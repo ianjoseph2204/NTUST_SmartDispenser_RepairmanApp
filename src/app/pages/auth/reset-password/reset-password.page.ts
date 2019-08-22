@@ -91,7 +91,7 @@ export class ResetPasswordPage implements OnInit {
       // send data into API with return value
       // success is 1 and failed is others with result Message
       let resultData = await this.api.resetPassword(credential, new_password, re_new_password, verif_code);
-      myToastRespond = resultData['RepsondNum']
+      myToastRespond = resultData['RepsondNum'];
       myToastMessage = resultData['Message'];
     }
 
@@ -121,8 +121,8 @@ export class ResetPasswordPage implements OnInit {
    * Check the input password inside the form with regex,
    * it must have at least 1 alphabet, 1 number, and minimum
    * with 6 characters.
-   * 
-   * @param email Email address being inputed and checked
+   *
+   * @param password
    */
   checkPassword (password: string) {
     

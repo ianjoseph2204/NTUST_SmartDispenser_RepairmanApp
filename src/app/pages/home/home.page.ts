@@ -180,7 +180,7 @@ export class HomePage {
    */
   async openDetail(mission: any, isDoneMission: boolean) {
 
-    // set some details to preference for complete/uncomplete the mission
+    // set some details to preference for complete/incomplete the mission
     await this.setDetailReportToPref(mission);
 
     // create object property for Modal page
