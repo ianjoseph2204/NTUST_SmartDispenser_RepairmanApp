@@ -17,7 +17,7 @@ export class DetailPage implements OnInit {
   doneMission: boolean;
   disabledButton: boolean;
   inputCamera = false;
-  arrived: boolean = null;
+  arrived: boolean = false;
   image: any = [];
   reader: any = [];
 
@@ -46,11 +46,7 @@ export class DetailPage implements OnInit {
 
   ionViewDidEnter () {
     this.chk.blockToInternalPages();
-    if (this.data['ArriveTime'] !== "") {
-      this.arrived = true;
-    } else {
-      this.arrived = false;
-    }    
+    this.arrived = this.data['ArriveTime'] !== "";
   }
 
   /**
@@ -81,6 +77,7 @@ export class DetailPage implements OnInit {
   }
 
   setArrival () {
+    this.dismiss();
     this.openQRCodeScanner();
   }
 
@@ -88,10 +85,10 @@ export class DetailPage implements OnInit {
     this.navCtrl.navigateForward(['qrcode-scanner']);
   }
 
-  async repairmanArrived () {
+  public async repairmanArrived () {
     
     // create loading screen
-    await this.createLoadCtrl();
+    //await DetailPage.createLoadCtrl();
 
     let myToast: any;
     let toastMessage: string;
@@ -122,24 +119,13 @@ export class DetailPage implements OnInit {
     this.dismissLoadCtrl();
   }
 
-  getDeviceIdFromQRCode(){
-
-    let url = "";
-
-    const words = url.split('/');
-    console.log(words);
-
-    let device_id = words[words.length - 1];
-    console.log("device id: " + device_id);
-  }
-
   async wantToClearMission (isMissionDone: boolean) {
     await this.dismiss();
     await this.pref.setData(StaticVariables.KEY__MISSION_DONE_UNDONE__BOOLEAN, isMissionDone);
-    this.navCtrl.navigateForward(['report-repair']);
+    await this.navCtrl.navigateForward(['report-repair']);
   }
 
-  // callClient (phoneNumber: string) {
-  //   this.callNumber.callNumber(phoneNumber, true);
-  // }
+  callClient (phoneNumber: string) {
+    //this.callNumber.callNumber(phoneNumber, true);
+  }
 }

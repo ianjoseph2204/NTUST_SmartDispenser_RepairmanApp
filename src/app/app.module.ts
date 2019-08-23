@@ -14,6 +14,9 @@ import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http'
 import { IonicStorageModule } from '@ionic/storage'
 
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -29,6 +32,8 @@ import { IonicStorageModule } from '@ionic/storage'
   providers: [
     StatusBar,
     SplashScreen,
+    Camera,
+    BarcodeScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
