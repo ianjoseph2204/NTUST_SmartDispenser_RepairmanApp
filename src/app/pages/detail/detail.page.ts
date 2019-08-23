@@ -4,6 +4,7 @@ import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api
 import { PreferenceManagerService } from 'src/app/services/PreferenceManager/preference-manager.service';
 import { StaticVariables } from 'src/app/classes/StaticVariables/static-variables';
 import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @Component({
   selector: 'app-detail',
@@ -14,6 +15,7 @@ export class DetailPage implements OnInit {
 
   data: any;
   doneMission: boolean;
+  disabledButton: boolean;
   inputCamera = false;
   arrived: boolean = null;
   image: any = [];
@@ -30,10 +32,12 @@ export class DetailPage implements OnInit {
     private toastCtrl: ToastController,
     private api: DispenserAPIService,
     private pref: PreferenceManagerService,
-    private chk: LoginSessionService
+    private chk: LoginSessionService,
+    private callNumber: CallNumber
   ) {
     this.data = navParams.get('Data');
     this.doneMission = navParams.get('DoneMission');
+    this.disabledButton = navParams.get('Disabled');
   }
 
   ngOnInit () {
@@ -133,5 +137,9 @@ export class DetailPage implements OnInit {
     await this.dismiss();
     await this.pref.setData(StaticVariables.KEY__MISSION_DONE_UNDONE__BOOLEAN, isMissionDone);
     this.navCtrl.navigateForward(['report-repair']);
+  }
+
+  callClient (phoneNumber: string) {
+    this.callNumber.callNumber(phoneNumber, true);
   }
 }

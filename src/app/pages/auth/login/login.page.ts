@@ -29,10 +29,40 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.checkPrefFirstTime ();
   }
 
   ionViewDidEnter () {
     this.chk.blockToAuthPages();
+  }
+
+  /**
+   * Check First Time Preference, this function is for mobile device
+   * because it cannot load data from preference if key was
+   * not build first.
+   */
+  async checkPrefFirstTime () {
+
+    // in here check the first time when app opened
+    let a = await this.pref.getData(StaticVariables.KEY__CHECK_PREF_CREATED);
+
+    // if identified that user first time use
+    if (a === null || a === undefined) {
+
+      // create some key first using empty data
+      await this.pref.setData(StaticVariables.KEY__CHECK_PREF_CREATED, true);
+
+      await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_EMAIL, "");
+      await this.pref.setData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID, "");
+      await this.pref.setData(StaticVariables.KEY__EMPLOYEE_NAME, "");
+      await this.pref.setData(StaticVariables.KEY__DEVICE_ID, "");
+      await this.pref.setData(StaticVariables.KEY__DEVICE_TYPE, "");
+      await this.pref.setData(StaticVariables.KEY__DEVICE_BUILDING_LOC, "");
+      await this.pref.setData(StaticVariables.KEY__DEVICE_PLACEMENT_LOC, "");
+      await this.pref.setData(StaticVariables.KEY__PROBLEM_DESCRIPTION, "");
+      await this.pref.setData(StaticVariables.KEY__MISSION_NUMBER, "");
+      await this.pref.setData(StaticVariables.KEY__MISSION_DONE_UNDONE__BOOLEAN, "");
+    }
   }
 
   /**

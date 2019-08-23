@@ -26,7 +26,7 @@
                 </ion-label>
               </ion-item>
   
-              <ion-card class="card-done" *ngFor="let missionItem of missionDay.Data" (click)="openDetail(missionItem, true)" tappable>
+              <ion-card class="card-done" *ngFor="let missionItem of missionDay.Data" (click)="openDetail(missionItem, true, false)" tappable>
 
                 <ion-item lines="none">
                   <ion-label class="card--title">
@@ -81,7 +81,7 @@
               </ion-item>
     
               <div>
-                <ion-card class="card-today" *ngFor="let item of todayMissionList.Data" (click)="openDetail(item, false)" tappable>
+                <ion-card class="card-today" *ngFor="let item of todayMissionList.Data" (click)="openDetail(item, false, false)" tappable>
 
                   <ion-item lines="none">
                     <ion-label class="card--title">
@@ -126,7 +126,7 @@
                 </ion-label>
               </ion-item>
 
-              <ion-card class="card-future" *ngFor="let missionItem of missionDay.Data">
+              <ion-card class="card-future" *ngFor="let missionItem of missionDay.Data" (click)="openDetail(missionItem, false, true)">
 
                 <ion-item lines="none">
                   <ion-label class="card--title">

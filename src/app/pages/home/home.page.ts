@@ -43,7 +43,7 @@ export class HomePage {
       private chk: LoginSessionService
   ) { }
 
-  async ngOnInit() {   
+  ngOnInit() {
     this.loadReady = false;
     this.fragmentTitle = this.fragmentTitleArray[1];
   }
@@ -161,14 +161,14 @@ export class HomePage {
    * @param mission
    * @param isDoneMission Boolean identification which is from Today or Done Mission page
    */
-  async openDetail(mission: any, isDoneMission: boolean) {
+  async openDetail(mission: any, isDoneMission: boolean, disabledButton: boolean) {
 
     // set some details to preference for complete/incomplete the mission
     await this.setDetailReportToPref(mission);
 
     // create object property for Modal page
     let buildNewMission = {
-      'Date': await UnitConverter.convertApiTimeToDate(mission['MissionTime']),
+      'Disabled': disabledButton,
       'Data': mission,
       'DoneMission': isDoneMission
     };
@@ -485,11 +485,11 @@ export class HomePage {
           ReportImages.push({"ReportImage": UnitConverter.convertBase64ToImage(getData['Complete_Source'])});
         }
 
-        let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
+        let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairDoneTime']);
         let newData = {
-          "ClientName": getData['Name'] ,
+          "ClientName": getData['Company'] ,
           "ClientAddress": getData['Address'] ,
-          "MissionTime": getData['RepairCallTime'] ,
+          "MissionTime": getData['RepairDoneTime'] ,
           "MissionTimeOnlyHour": MissionTimeOnlyHour ,
           "ClientPhone": getData['Tel'] ,
           "ClientContactPerson": getData['Name'] ,
@@ -596,7 +596,10 @@ export class HomePage {
 
   /**
    * Create JSON data for Future & Today mission.
-   * @param getData
+   * 
+   * @param getData Json object data
+   * 
+   * @returns JSON Object New data
    */
   static setJSONData(getData){
     let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);

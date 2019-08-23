@@ -2,8 +2,11 @@
   <ion-toolbar>
     <div class="header">
       <span>
-        <ion-icon (click)="backButton()" style="zoom: 1.5;" name="ios-arrow-back"></ion-icon>
-        <span class="report-repairing-progress">Report repairing progress</span>
+        <span class="back-button" (click)="backButton()">
+          <ion-icon style="zoom: 1.2;" name="ios-arrow-back"></ion-icon>
+        </span>
+        <span class="report-repairing-text">Report repairing progress</span>
+        <span *ngIf="result_description!=''" class="submit-button" (click)="submitButton()">Submit</span>
       </span>
     </div>
   </ion-toolbar>
@@ -11,14 +14,23 @@
 
 <ion-content>
 
+  <div class="icon-space">
+    <div class="icon-jellyfish">
+      <img src="assets\acuo-avatar\group@3x.jpg" alt="avatar" style="border-radius: 50px;">
+    </div>
+  </div>
   <!--Card for User report information-->
   <ion-card>
+
+    <div class="icon-space"></div>
+
     <span class="detail-logo">
       <ion-icon color="primary" name="pin"></ion-icon>
     </span>
     <span class="detail-property">Location</span>
     <span class="detail-separator">:</span>
-    <span class="detail-information">{{device_building_position}}, {{device_placement_position}}</span>
+    <span *ngIf="device_building_position!=null && device_placement_position!=null" class="detail-information">{{device_building_position}}, {{device_placement_position}}</span>
+    <span *ngIf="device_building_position==null && device_placement_position==null" class="detail-information"> </span>
 
     <span class="detail-logo">
       <ion-icon color="primary" name="pricetag"></ion-icon>
@@ -54,42 +66,84 @@
     <div class="description-text">Description</div>
 
     <div class="description-textarea">
-      <ion-textarea placeholder="Write down your progress on this repair..."></ion-textarea>
+      <ion-item>
+        <ion-textarea [(ngModel)]="result_description" placeholder="Write down your progress on this repair..."></ion-textarea>
+      </ion-item>
     </div>
 
     <div class="description-text">Upload photos</div>
 
     <div class="image-container">
+
+      <!--1st picture block-->
       <span class="image-block">
-        <div class="image-upload-space">
-          <div class="camera-icon">
-            <ion-icon name="camera" size="large"></ion-icon>
+        <!--The display upload picture box-->
+        <div *ngIf="urlImage[0] === null">
+          <label for="input-file-0">
+            <div class="image-upload-space">
+              <div class="camera-icon">
+                <ion-icon name="camera" size="large"></ion-icon>
+              </div>
+            </div>
+          </label>
+
+          <input id="input-file-0" accept="image/*" type="file" (change)="onFileSelect($event, 0)" />
+        </div>
+
+        <!--The display of the picture-->
+        <div *ngIf="urlImage[0] !== null">
+          <div class="image-upload-space">
+            <img alt="camera" [src]="urlImage[0]" class="imageUrl">
           </div>
+          <div class="delete" (click)="delete(0)"><u><b>Delete</b></u></div>
         </div>
       </span>
 
       <span class="image-block">
-        <div class="image-upload-space">
-          <div class="camera-icon">
-            <ion-icon name="camera" size="large"></ion-icon>
+         <!--The display upload picture box-->
+        <div *ngIf="urlImage[1] === null">
+          <label for="input-file-1">
+            <div class="image-upload-space">
+              <div class="camera-icon">
+                <ion-icon name="camera" size="large"></ion-icon>
+              </div>
+            </div>
+          </label>
+
+          <input id="input-file-1" accept="image/*" type="file" (change)="onFileSelect($event, 1)" />
+        </div>
+
+        <!--The display of the picture-->
+        <div *ngIf="urlImage[1] !== null">
+          <div class="image-upload-space">
+            <img alt="camera" [src]="urlImage[1]" class="imageUrl">
           </div>
+          <div class="delete" (click)="delete(1)"><u><b>Delete</b></u></div>
         </div>
       </span>
 
       <span class="image-block">
-        <div class="image-upload-space">
-          <div class="camera-icon">
-            <ion-icon name="camera" size="large"></ion-icon>
+        <!--The display upload picture box-->
+        <div *ngIf="urlImage[2] === null">
+          <label for="input-file-2">
+            <div class="image-upload-space">
+              <div class="camera-icon">
+                <ion-icon name="camera" size="large"></ion-icon>
+              </div>
+            </div>
+          </label>
+
+          <input id="input-file-2" accept="image/*" type="file" (change)="onFileSelect($event, 2)" />
+        </div>
+
+        <!--The display of the picture-->
+        <div *ngIf="urlImage[2] !== null">
+          <div class="image-upload-space">
+            <img alt="camera" [src]="urlImage[2]" class="imageUrl">
           </div>
+          <div class="delete" (click)="delete(2)"><u><b>Delete</b></u></div>
         </div>
       </span>
-    </div>
-
-    <div style="margin: 0 10px 10px 10px">
-      <ion-button expand="block">SUBMIT</ion-button>
     </div>
   </ion-card>
-
-
-
 </ion-content>

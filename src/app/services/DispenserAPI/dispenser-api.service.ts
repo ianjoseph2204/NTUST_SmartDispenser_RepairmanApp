@@ -725,10 +725,21 @@ export class DispenserAPIService {
       let missionTime = UnitConverter.convertApiTimeToJson(data[i]['RepairCallTime']);
       let currentTime = UnitConverter.convertApiTimeToJson(nowTime);
 
-      if (missionTime['Year'] >= currentTime['Year']) {
-        if (missionTime['Month'] >= currentTime['Month']) {
-          if (missionTime['DateOfMonth'] > currentTime['DateOfMonth']) {
-            returnArray.push(data[i]);
+      // check if it has greater year
+      if (missionTime['Year'] > currentTime['Year']) {
+        returnArray.push(data[i]);
+
+        // check if it has greater month
+      } else if (missionTime['Year'] === currentTime['Year']) {
+        if (missionTime['Month'] > currentTime['Month']) {
+          returnArray.push(data[i]);
+
+          // check if it has greater date
+        } else if (missionTime['Year'] === currentTime['Year']) {
+          if (missionTime['Month'] === currentTime['Month']) {
+            if (missionTime['DateOfMonth'] > currentTime['DateOfMonth']) {
+              returnArray.push(data[i]);
+            }
           }
         }
       }

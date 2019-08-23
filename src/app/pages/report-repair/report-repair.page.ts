@@ -124,17 +124,8 @@ export class ReportRepairPage implements OnInit {
     alert = await this.alertCtrl.create({
       mode: "ios",
       header: 'Submission Success!',
-      buttons: [
-        {
-          text: 'OK',
-          handler: () => {
-          }
-        }
-      ]
     });
-
-    await alert.present(); //Display the alert message
-
+    alert.present(); //Display the alert message
     this.backButton();
   }
 }
