@@ -4,6 +4,7 @@ import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api
 import { PreferenceManagerService } from 'src/app/services/PreferenceManager/preference-manager.service';
 import { StaticVariables } from 'src/app/classes/StaticVariables/static-variables';
 import { UnitConverter } from 'src/app/classes/UnitConverter/unit-converter';
+import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
 
 @Component({
   selector: 'app-profile',
@@ -22,15 +23,19 @@ export class ProfilePage implements OnInit {
     private navCtrl: NavController,
     private alertCtrl: AlertController,
     private api: DispenserAPIService,
-    private pref: PreferenceManagerService
+    private pref: PreferenceManagerService,
+    private chk: LoginSessionService
   ) { }
 
   async ngOnInit() {
     
-    // get id from preference
+    // get id from preference and create profile information
     this.employee_id = await this.pref.getData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID);
-
     this.createProfile(this.employee_id);
+  }
+
+  ionViewDidEnter () {
+    this.chk.blockToInternalPages();
   }
 
   /**
@@ -39,14 +44,13 @@ export class ProfilePage implements OnInit {
    */
   async createProfile(employee_id: any){
     if (employee_id !== null) {
+     
       // get profile from API
       let getProfile = await this.api.getRepairmanProfile(employee_id);
 
       // set attributes
       this.employee_name = getProfile['FullName'];
-      this.employee_email = getProfile['Email'];
-
-      // set image if not null
+      this.employee_email = await this.pref.getData(StaticVariables.KEY__LOGIN_EMPLOYEE_EMAIL);
       if (getProfile['Picture'] !== null) {
         this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
       }

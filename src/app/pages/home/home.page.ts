@@ -6,6 +6,7 @@ import {DispenserAPIService} from 'src/app/services/DispenserAPI/dispenser-api.s
 import {PreferenceManagerService} from 'src/app/services/PreferenceManager/preference-manager.service';
 import {UnitConverter} from 'src/app/classes/UnitConverter/unit-converter';
 import {StaticVariables} from '../../classes/StaticVariables/static-variables';
+import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
 
 @Component({
   selector: 'app-home',
@@ -38,52 +39,35 @@ export class HomePage {
       private navCtrl: NavController,
       public modalController: ModalController,
       private api: DispenserAPIService,
-      private pref: PreferenceManagerService
+      private pref: PreferenceManagerService,
+      private chk: LoginSessionService
   ) { }
 
-  async ngOnInit() {
-
-    // initialize
+  async ngOnInit() {   
     this.loadReady = false;
     this.fragmentTitle = this.fragmentTitleArray[1];
+  }
+
+  async ionViewDidEnter () {
+    await this.chk.blockToInternalPages();
+    
+    // set or update current time
     this.currentTime = UnitConverter.convertDateToApiTimeFormat(new Date());
 
-    // get id from preference
+    // set or update employee id from preference
     this.employee_id = await this.pref.getData(StaticVariables.KEY__LOGIN_EMPLOYEE_ID);
 
     if (this.employee_id !== null) {
       
-      // set profile
+      // set or update profile
       await this.api.getRepairmanProfile(this.employee_id).then((getProfile) => {
         if (getProfile['Picture'] !== null) {
           this.employee_picture_string = UnitConverter.convertBase64ToImage(getProfile['Picture']);
         }
       });
 
-      // set Done Mission
-      let doneMissionRawData = await this.api.getAssignmentDone(this.employee_id);
-      if (doneMissionRawData.length !== 0) {
-        this.doneMissionList = await this.processDataDoneMission(doneMissionRawData);
-      } else {
-        this.doneMissionList = null;
-      }    
-
-      // set Today Mission
-      let todayMissionRawData = await this.api.getAssignmentToday(this.employee_id, this.currentTime);
-      if (todayMissionRawData.length !== 0) {
-        this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
-      } else {
-        this.todayMissionList = null;
-      }
-
-      // set Future Mission
-      let futureMissionRawData = await this.api.getAssignmentNext(this.employee_id, this.currentTime);
-      if (futureMissionRawData.length !== 0) {
-        this.futureMissionList = await this.processDataFutureMission(futureMissionRawData);
-      } else {
-        this.futureMissionList = null;
-      }
-
+      // set or update mission data
+      await this.updateMissionData();
     } else {
 
       // set profile to null
@@ -95,8 +79,6 @@ export class HomePage {
       this.todayMissionList = null;
       this.futureMissionList = null;
     }
-
-    this.loadReady = true;
   }
 
   /**
@@ -198,6 +180,12 @@ export class HomePage {
       cssClass: 'my-custom-modal-css'
     });
     await modal.present();
+    await modal.onDidDismiss().then(async () => {     
+      if (StaticVariables.MISSION_UPDATE === true) {
+        await this.updateMissionData();
+        StaticVariables.MISSION_UPDATE = false;
+      }
+    });
   }
 
   /**
@@ -421,6 +409,37 @@ export class HomePage {
     return dataAddOn;
   }
 
+  async updateMissionData () {
+
+    this.loadReady = false;
+
+    // set or update Done Mission
+    let doneMissionRawData = await this.api.getAssignmentDone(this.employee_id);
+    if (doneMissionRawData.length !== 0) {
+      this.doneMissionList = await this.processDataDoneMission(doneMissionRawData);
+    } else {
+      this.doneMissionList = null;
+    }    
+
+    // set or update Today Mission
+    let todayMissionRawData = await this.api.getAssignmentToday(this.employee_id, this.currentTime);
+    if (todayMissionRawData.length !== 0) {
+      this.todayMissionList = await this.processDataTodayMission(todayMissionRawData);
+    } else {
+      this.todayMissionList = null;
+    }
+
+    // set or update Future Mission
+    let futureMissionRawData = await this.api.getAssignmentNext(this.employee_id, this.currentTime);
+    if (futureMissionRawData.length !== 0) {
+      this.futureMissionList = await this.processDataFutureMission(futureMissionRawData);
+    } else {
+      this.futureMissionList = null;
+    }
+
+    this.loadReady = true;
+  }
+
   /**
    * Function to process data for Done Mission, it will need raw data
    * from Done Mission API and will return the result that ready to
@@ -583,7 +602,7 @@ export class HomePage {
     let MissionTimeOnlyHour = UnitConverter.convertDateStringToHourMinuteOnly(getData['RepairCallTime']);
 
     return {
-      "ClientName": getData['Name'] ,
+      "ClientName": getData['Company'] ,
       "ClientAddress": getData['Address'] ,
       "MissionTime": getData['RepairCallTime'] ,
       "MissionTimeOnlyHour": MissionTimeOnlyHour ,
@@ -599,6 +618,7 @@ export class HomePage {
       "Repairman": getData['Maintainer'] ,
       "ClientNumber": "..." ,
       "MissionNumber": getData['MissionNumber'] ,
+      "ArriveTime": getData['ArriveTime']
     };
   }
 }

@@ -3,6 +3,7 @@ import {PreferenceManagerService} from '../../services/PreferenceManager/prefere
 import {StaticVariables} from '../../classes/StaticVariables/static-variables';
 import {AlertController, NavController} from '@ionic/angular';
 import {DispenserAPIService} from '../../services/DispenserAPI/dispenser-api.service';
+import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
 
 @Component({
   selector: 'app-report-repair',
@@ -27,10 +28,16 @@ export class ReportRepairPage implements OnInit {
       private alertCtrl: AlertController,
       private pref: PreferenceManagerService,
       private api: DispenserAPIService,
-      private navCtrl: NavController) { }
+      private navCtrl: NavController,
+      private chk: LoginSessionService
+    ) { }
 
   async ngOnInit() {
     await this.getPrefData();
+  }
+
+  ionViewDidEnter () {
+    this.chk.blockToInternalPages();
   }
 
   /**
