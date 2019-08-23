@@ -4,7 +4,7 @@ import { DispenserAPIService } from 'src/app/services/DispenserAPI/dispenser-api
 import { PreferenceManagerService } from 'src/app/services/PreferenceManager/preference-manager.service';
 import { StaticVariables } from 'src/app/classes/StaticVariables/static-variables';
 import { LoginSessionService } from 'src/app/services/LoginSession/login-session.service';
-import { CallNumber } from '@ionic-native/call-number/ngx';
+// import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @Component({
   selector: 'app-detail',
@@ -33,7 +33,7 @@ export class DetailPage implements OnInit {
     private api: DispenserAPIService,
     private pref: PreferenceManagerService,
     private chk: LoginSessionService,
-    private callNumber: CallNumber
+    // private callNumber: CallNumber
   ) {
     this.data = navParams.get('Data');
     this.doneMission = navParams.get('DoneMission');
@@ -139,7 +139,7 @@ export class DetailPage implements OnInit {
     this.navCtrl.navigateForward(['report-repair']);
   }
 
-  callClient (phoneNumber: string) {
-    this.callNumber.callNumber(phoneNumber, true);
-  }
+  // callClient (phoneNumber: string) {
+  //   this.callNumber.callNumber(phoneNumber, true);
+  // }
 }
