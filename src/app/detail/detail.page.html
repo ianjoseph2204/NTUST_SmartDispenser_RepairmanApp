@@ -1,0 +1,76 @@
+<ion-header no-border>
+  <ion-toolbar class="header">
+    <ion-item lines="none">
+      <ion-title class="title-text">CLIENT NAME</ion-title>
+      <ion-icon slot="end" mode="ios" name="arrow-down" (click)="dismiss()" style="cursor: pointer; color: white;">
+      </ion-icon>
+    </ion-item>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <!-- This is use to testing send variable from home page to modal page -->
+  <!-- {{val}}-->
+
+  <ion-list padding>
+    <ion-item>
+      <p style="color:white; font-weight: lighter; margin: 0px;">TEL</p>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h1 style="color:white">08123112123</h1>
+      </ion-label>
+      <ion-button class=" button-content" size="small">Call</ion-button>
+    </ion-item>
+
+    <ion-item>
+      <p style="color:white; font-weight: lighter;  margin: 0px;">CONTACT</p>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h1 style="color:white">Someone</h1>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <!-- This is trial to make div as button -->
+  <!-- <div class="row">
+    <div class="column" style="background-color:#aaa;">
+      <h3 style="text-align: center">Column 1</h3>
+    </div>
+    <div class="column" style="background-color:#bbb;">
+      <h3 style="text-align: center;">Column 2</h3>
+    </div>
+  </div> -->
+  <ion-toolbar class="footer">
+    <section class="full-width">
+      <ion-button class="button-footer" expand="full" *ngIf="!Arrived" (click)="arrived()">Arrived</ion-button>
+
+      <ion-grid *ngIf="Arrived">
+        <ion-row>
+          <ion-col size="6">
+            <div>
+              <ion-button class="button-footer" expand="full" (click)="applyForComponent()">Apply for<br>Component
+              </ion-button>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div>
+              <ion-button class="button-footer" *ngIf="!inputCamera" expand="full" (click)="compleRepair()">Comple
+                Repair
+              </ion-button>
+              <ion-button class="button-footer" *ngIf="inputCamera" expand="full" (click)="imageInput.click()">Comple
+                Repair
+              </ion-button>
+              <input type="file" id="file-input" accept="image/*;capture=camera" style="display: none;"
+                (change)="uploadImage($event)" multiple #imageInput>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </section>
+  </ion-toolbar>
+</ion-footer>
