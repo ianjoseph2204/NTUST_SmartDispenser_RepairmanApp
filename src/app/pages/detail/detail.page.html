@@ -91,7 +91,7 @@
                   *ngFor="let images of data.ReportImages; let i=index"
                   [src]="images.ReportImage"
                   alt="image-{{i+1}}"
-                  class="image-report" />
+                  class="image-report"/>
         </div>
         <div *ngIf="data.ReportIndex === 0">
           <span class="item--detail">No pictures reported.</span>

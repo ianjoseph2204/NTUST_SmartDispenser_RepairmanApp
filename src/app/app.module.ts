@@ -16,6 +16,9 @@ import { IonicStorageModule } from '@ionic/storage'
 import { CallNumber } from '@ionic-native/call-number/ngx'
 import { DetailPageModule } from './pages/detail/detail.module';
 
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -33,7 +36,10 @@ import { DetailPageModule } from './pages/detail/detail.module';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    CallNumber
+    CallNumber,
+    Camera,
+    BarcodeScanner,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
 })
