@@ -1,0 +1,49 @@
+ion-col {
+    --ion-grid-column-padding: 0px;
+}
+
+ion-header {
+    --ion-background-color: #259ed6;
+}
+
+ion-content {
+    --ion-background-color: #259ed6;
+}
+
+ion-grid {
+    --ion-grid-padding: 0px;
+}
+
+ion-item.title {
+    --padding-top: 20px;
+    --padding-start: 11px;
+    --padding-end: 11px;
+}
+
+ion-button {
+    --border-width: 0px;
+}
+
+.client-name {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.item--title {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: rgba($color: #ffffff, $alpha: 0.75);
+}
+
+.item--detail {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.image-report {
+    max-width: 250px;
+    width: auto;
+    margin-bottom: 16px;
+    display: block;
+}

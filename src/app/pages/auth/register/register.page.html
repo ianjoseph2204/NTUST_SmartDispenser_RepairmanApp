@@ -1,0 +1,89 @@
+<ion-content class="i-theme1">
+
+  <!-- cancel button on top right corner -->
+  <div class="icon-cancel">
+    <img src="assets/cancel/rectangle@3x.png" alt="cancel" (click)="backFunc()">
+  </div>
+
+  <!-- Union/ACUO icon on top middle -->
+  <div class="header">
+    <img 
+      class="img-header"
+      src="assets/acuo-icons/rectangle_2@3x.png"
+      alt="acuo-icons">
+  </div>
+
+  <!-- body content -->
+  <div class="section">
+    <div class="section-inside">
+
+      <!-- title on middle -->
+      <div class="title">
+        <h2><b>REGISTER</b></h2>
+      </div>
+
+      <!-- profile picture input space (to upload a picture) -->
+      <ion-item lines="none">
+        <div class="image-upload center">
+          <h6>Profile Picture</h6>
+          <label for="file-input">
+            <!-- Icon by https://www.flaticon.com/authors/iconnice -->
+            <img
+              *ngIf="!alreadyUpload"
+              src="/assets/upload-image/profile-empty-add.png"
+              class="image-upload--uploadPhoto before" />
+            <img 
+              *ngIf="alreadyUpload"
+              [src]="urlImage" 
+              class="image-upload--uploadPhoto center">
+          </label>
+          <input id="file-input" accept="image/*" type="file" (change)="onFileSelect($event)" />
+        </div>
+      </ion-item>
+
+      <!-- full name input form -->
+      <ion-item>
+        <ion-label position="floating">Full Name</ion-label>
+        <ion-input required type="text" [(ngModel)]="fullname"></ion-input>
+      </ion-item>
+  
+      <!-- employee ID input form -->
+      <ion-item>
+        <ion-label position="floating">Employee ID</ion-label>
+        <ion-input required type="text" [(ngModel)]="employee_id"></ion-input>
+      </ion-item>
+  
+      <!-- email address input form -->
+      <ion-item>
+        <ion-label position="floating">Company Email Address</ion-label>
+        <ion-input required type="email" [(ngModel)]="email" (change)=checkEmail(email)></ion-input>
+        <p *ngIf="emailFalse" class="falseInput">Email is invalid or must be company domain!</p>
+      </ion-item>
+  
+      <!-- password input form -->
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input required type="password" [(ngModel)]="password" (change)=checkPassword(password)></ion-input>
+        <p *ngIf="passwordFalse" class="falseInput">Password must minimum 8 character with at least contains 1 alphabet and 1 number!</p>
+      </ion-item>
+  
+      <!-- re enter password input form -->
+      <ion-item>
+        <ion-label position="floating">Re-enter Password</ion-label>
+        <ion-input required type="password" [(ngModel)]="re_password"></ion-input>
+      </ion-item>
+  
+      <h6 class="confirm-text">
+        By clicking <b>Sign Up</b>, you agree to our Terms, Data Policy and Cookie Policy.
+        Your account will be verified by your company and receive notification to your email.
+      </h6>
+  
+      <!-- register button -->
+      <div class="btn-yes">
+        <ion-button class="i-btn-yes" size="small" fill="solid" expand="block" (click)="signUp()">Sign up</ion-button>
+      </div>
+
+    </div>
+  </div>
+
+</ion-content>

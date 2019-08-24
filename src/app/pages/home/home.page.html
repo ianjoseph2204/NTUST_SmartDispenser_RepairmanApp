@@ -1,0 +1,167 @@
+<ion-app>
+  
+  <ion-header padding>
+    <ion-item class="ion-item--no-background title" lines="none">
+      <ion-label>{{fragmentTitle}}</ion-label>
+      <ion-avatar slot="end" (click)="profile()">
+        <img *ngIf="employee_picture_string === null" src="assets\upload-image\profile-empty.png" alt="profile-image" />
+        <img *ngIf="employee_picture_string !== null" [src]="employee_picture_string" alt="profile-image" />
+      </ion-avatar>
+    </ion-item>
+  </ion-header>
+
+  <ion-content padding scroll-y="false">
+    <ion-slides [options]="slideOpts" #slides (ionSlideDidChange)="slideChanges()">
+
+      <!-- DONE SLIDE -->
+      <ion-slide>
+        <ion-content>
+          <ng-container *ngIf="loadReady && doneMissionList !== null">
+            <ion-list class="ion-list--no-background" *ngFor="let missionDay of doneMissionList">
+      
+              <ion-item class="ion-item--no-background" lines="none">
+                <ion-label>
+                  <h2 class="subtitle">{{missionDay.DayString.toUpperCase()}}</h2>
+                  <span class="subtitle--date">{{missionDay.DateString.toUpperCase()}}</span>
+                </ion-label>
+              </ion-item>
+  
+              <ion-card class="card-done" *ngFor="let missionItem of missionDay.Data" (click)="openDetail(missionItem, true, false)" tappable>
+
+                <ion-item lines="none">
+                  <ion-label class="card--title">
+                    <span>{{missionItem.ClientName}}</span>
+                  </ion-label>
+                  <ion-label class="card--title-time">
+                    <span>{{missionItem.MissionTimeOnlyHour}}</span>
+                  </ion-label>
+                </ion-item>
+
+                <ion-item lines="none" class="address--done">
+                  <ion-label class="card--address card--address--only-done">
+                    <span>{{missionItem.ClientAddress}}</span>
+                  </ion-label>
+                </ion-item>
+
+                <div class="card--done">
+                  <img
+                    *ngFor="let images of missionItem.ReportImages; let i=index"
+                    [src]="images.ReportImage"
+                    alt="image-{{i+1}}"
+                    class="card--done--image-report" />
+                </div>
+
+              </ion-card>
+  
+            </ion-list>
+          </ng-container>
+
+          <div class="no-data" *ngIf="!loadReady">
+            <b>Please wait ...</b>
+          </div>
+
+          <div class="no-data" *ngIf="loadReady && doneMissionList === null">
+            <b>No mission has been completed yet.</b>
+          </div>
+
+          <br>
+        </ion-content>
+      </ion-slide>
+
+      <!-- TODAY SLIDE -->
+      <ion-slide>
+        <ion-content>
+            <ion-list class="ion-list--no-background"  *ngIf="loadReady && todayMissionList !== null">
+    
+              <ion-item class="ion-item--no-background" lines="none">
+                <ion-label>
+                  <h2 class="subtitle">TODAY</h2>
+                  <span class="subtitle--date">{{todayMissionList.Date.toUpperCase()}}</span>
+                </ion-label>
+              </ion-item>
+    
+              <div>
+                <ion-card class="card-today" *ngFor="let item of todayMissionList.Data" (click)="openDetail(item, false, false)" tappable>
+
+                  <ion-item lines="none">
+                    <ion-label class="card--title">
+                      <span>{{item.ClientName}}</span>
+                    </ion-label>
+                    <ion-label class="card--title-time">
+                      <span>{{item.MissionTimeOnlyHour}}</span>
+                    </ion-label>
+                  </ion-item>
+
+                  <ion-item lines="none">
+                    <ion-label class="card--address">
+                      <span>{{item.ClientAddress}}</span>
+                    </ion-label>
+                  </ion-item>
+
+                </ion-card>
+              </div>
+    
+            </ion-list>
+
+            <div class="no-data" *ngIf="!loadReady">
+              <b>Please wait ...</b>
+            </div>
+
+            <div class="no-data" *ngIf="loadReady && todayMissionList === null">
+              <b>No mission for today.</b>
+            </div>
+        </ion-content>
+      </ion-slide>
+
+      <!-- FUTURE SLIDE -->
+      <ion-slide>
+        <ion-content>
+          <ng-container *ngIf="loadReady && futureMissionList !== null">
+            <ion-list class="ion-list--no-background" *ngFor="let missionDay of futureMissionList">
+        
+              <ion-item class="ion-item--no-background" lines="none">
+                <ion-label>
+                  <h2 class="subtitle">{{missionDay.DayString.toUpperCase()}}</h2>
+                  <span class="subtitle--date">{{missionDay.DateString.toUpperCase()}}</span>
+                </ion-label>
+              </ion-item>
+
+              <ion-card class="card-future" *ngFor="let missionItem of missionDay.Data" (click)="openDetail(missionItem, false, true)">
+
+                <ion-item lines="none">
+                  <ion-label class="card--title">
+                    <span>{{missionItem.ClientName}}</span>
+                  </ion-label>
+
+                  <ion-label class="card--title-time">
+                    <span>{{missionItem.MissionTimeOnlyHour}}</span>
+                  </ion-label>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label class="card--address">
+                    <span>{{missionItem.ClientAddress}}</span>
+                  </ion-label>
+                </ion-item>
+
+              </ion-card>
+
+            </ion-list>
+          </ng-container>
+
+          <div class="no-data" *ngIf="!loadReady">
+            <b>Please wait ...</b>
+          </div>
+
+          <div class="no-data" *ngIf="loadReady && futureMissionList === null">
+            <b>No mission has been assigned.</b>
+          </div>
+
+          <br>
+        </ion-content>
+      </ion-slide>
+
+    </ion-slides>
+
+  </ion-content>
+</ion-app>

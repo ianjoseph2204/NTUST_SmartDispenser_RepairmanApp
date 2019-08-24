@@ -1,0 +1,132 @@
+:root {
+    --ion-safe-area-top: 20px;
+    --ion-safe-area-bottom: 22px;
+}
+
+ion-header {
+    background-color: #ededed;
+    height: auto;
+    padding-bottom: 0px;
+}
+
+ion-avatar {
+    border-radius: 50%;
+}
+
+.header-md:after {
+    width: 0%;
+}
+
+ion-content {
+    --background: #ededed;
+    height: 85%;
+    padding-top: 0px;
+}
+
+.swiper-slide {
+    display: block;
+
+}
+
+ion-slide>h2 {
+    margin-top: 2.8rem;
+}
+
+ion-slide {
+    height: 100vh;
+    flex-direction: column;
+}
+
+ion-card {
+    --background: #ffffff;
+}
+
+ion-card.card-future {
+    border-left: 5px solid #259ed6;
+}
+
+ion-card.card-today {
+    border-left: 5px solid #259ed6;
+    cursor: pointer;
+}
+
+ion-card.card-done {
+    border-left: 5px solid #69d392;
+}
+
+.ion-list--no-background {
+    background: var(
+        --ion-item-background,
+        var(--ion-background-color, rgba (0,0,0,0))
+    );
+}
+
+.ion-item--no-background {
+    --background: rgba(0, 0, 0, 0);
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    padding-left: 0px;
+}
+
+.subtitle {
+    font-weight: bold;
+    font-size: 16px
+}
+
+.subtitle--date {
+    font-size: 14px;
+    color: rgba($color: #000000, $alpha: 0.75);
+}
+
+.card--title {
+    margin-bottom: -8px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card--title-time {
+    margin-bottom: -8px;
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card--address {
+    margin-top: -8px;
+    font-size: 16px;
+    color: rgba($color: #000000, $alpha: 0.75);
+}
+
+.card--address--only-done {
+    margin-bottom: -8px;
+}
+
+.address--done {
+    --min-height: 32px;
+}
+
+.card--done {
+    padding: 0px 16px;
+    margin-bottom: 16px;
+    height: auto;
+    overflow: auto;
+}
+
+.card--done--image-report {
+    float: left;
+    max-width: 75px;
+    width: auto;
+    margin-right: 8px;
+    display: block;
+}
+
+.no-data {
+    transform: translateY(80%);
+    position: relative;
+    height: 50%;
+    font-size: 20px;
+    color: rgba($color: #000000, $alpha: 0.5)
+}

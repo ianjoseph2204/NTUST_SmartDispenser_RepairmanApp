@@ -1,0 +1,39 @@
+<ion-content>
+
+  <!-- cancel button -->
+  <div class="button--cancel" (click)="backFunc()">
+    <ion-icon slot="start" name="close" size="large" color="black"></ion-icon>
+  </div>
+
+  <!-- profile picture -->
+  <div class="user--profile-picture">
+    <img *ngIf="employee_picture_string === null" src="assets\upload-image\profile-empty.png" alt="profile-image" />
+    <img *ngIf="employee_picture_string !== null" [src]="employee_picture_string" alt="profile-image" />
+  </div>
+
+  <!-- name -->
+  <div class="user--full-name">
+    <div *ngIf="employee_name === null">No data</div>
+    <div *ngIf="employee_name !== null">{{employee_name}}</div>
+  </div>
+
+  <!-- email -->
+  <div class="user--email-address">
+    <div *ngIf="employee_email === null"><i>Invalid email</i></div>
+    <div *ngIf="employee_email !== null"><i>{{employee_email}}</i></div>
+  </div>
+
+  <!-- employee id -->
+  <div class="user--id">
+    <div *ngIf="employee_id === null"><i>Invalid ID</i></div>
+    <div *ngIf="employee_id !== null"><i>{{employee_id}}</i></div>
+  </div>
+
+  <!-- log out button -->
+  <div class="button--log-out">
+    <ion-button (click)="logout()" color="danger" fill="solid" expand="block" >
+      LOG OUT
+    </ion-button>
+  </div>
+
+</ion-content>
