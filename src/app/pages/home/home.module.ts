@@ -22,7 +22,7 @@ import {ZXingScannerModule} from '@zxing/ngx-scanner';
         ]),
         ZXingScannerModule
     ],
-  declarations: [HomePage, DetailPage],
-  entryComponents: [DetailPage]
+  declarations: [HomePage],
+//   entryComponents: [DetailPage]
 })
 export class HomePageModule { }

@@ -21,16 +21,16 @@ export class ReportRepairPage implements OnInit {
   public mission_number: any;
 
   public result_description: string = '';
-  private urlImage: any = [null, null, null];
-  private fileImage: any = [null, null, null];
+  urlImage: any = [null, null, null];
+  fileImage: any = [null, null, null];
 
   constructor(
-      private alertCtrl: AlertController,
-      private pref: PreferenceManagerService,
-      private api: DispenserAPIService,
-      private navCtrl: NavController,
-      private chk: LoginSessionService
-    ) { }
+    private alertCtrl: AlertController,
+    private pref: PreferenceManagerService,
+    private api: DispenserAPIService,
+    private navCtrl: NavController,
+    private chk: LoginSessionService
+  ) { }
 
   async ngOnInit() {
     await this.getPrefData();

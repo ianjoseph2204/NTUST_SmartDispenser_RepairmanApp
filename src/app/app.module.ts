@@ -13,6 +13,8 @@ import { environment } from '../environments/environment';
 
 import { HttpClientModule } from '@angular/common/http'
 import { IonicStorageModule } from '@ionic/storage'
+import { CallNumber } from '@ionic-native/call-number/ngx'
+import { DetailPageModule } from './pages/detail/detail.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,12 +26,14 @@ import { IonicStorageModule } from '@ionic/storage'
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     
     HttpClientModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    DetailPageModule
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    CallNumber
   ],
   bootstrap: [AppComponent]
 })
